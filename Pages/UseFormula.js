@@ -1,10 +1,10 @@
-import { ActivityIndicator, View, Text, StyleSheet, StatusBar, TouchableOpacity, ScrollView } from 'react-native'
+import { ActivityIndicator, View, Text, StyleSheet, StatusBar, TouchableOpacity, ScrollView, Alert } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import VariableInput from '../Components/VariableInput'
 import axios from 'axios'
 
 const UseFormula = (props) => {
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)    
     const timerRef = useRef(null);
 
     const [variables, setVariables] = useState(props.selectedFormula.variables.map((v) => {
@@ -14,11 +14,18 @@ const UseFormula = (props) => {
         }
     }));
     
-    useEffect(() => {
-        return () => {
-          clearTimeout(timerRef.current);
-        };
-      }, []);
+    const createErrorAlert = () =>
+        Alert.alert('Error', 'Something went wrong', [
+        {
+            text: 'OK',
+            onPress: () => console.log('Ok'),
+        },
+        {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+        },      
+        ]);
 
     const expression = props.selectedFormula.expression;
 
@@ -67,12 +74,18 @@ const UseFormula = (props) => {
             
             // Make the api request to the solve
             // Add a time out if the API solver is taking too long
-            timerRef.current = setTimeout(() => setLoading(true), 500)                    
+            let apiCallFinished = false;
+            timerRef.current = setTimeout(() => {
+                // The api call can finish before this triggers, so check if the call is already finished.
+                if (!apiCallFinished) {                    
+                    setLoading(true)                    
+                }
+            }, 500)         
+
             axios.post("http://10.0.2.2:5000/solve", {data: result})
                 .then((response) => {
                     let newVariablesList = [...variables];                    
                     
-                    // console.log("var to replace", varToReplace);
                     const index = variables.findIndex((v) => v.variableName === varToReplace);                     
                     newVariablesList[index].input = response.data.result.toString();
                     console.log(response.data.result)
@@ -83,14 +96,16 @@ const UseFormula = (props) => {
                 })   
                 .finally(() => {
                     console.log("done");
-                    setLoading(false);
+                    apiCallFinished = true;
+                    setLoading(false);                    
                     clearTimeout(timerRef.current);
                 })         
         }
         else {
             // If zero, then are no variables that arent filled
             // If more than one, there are too many that arent filled
-            // TODO: send an alert
+            // createErrorAlert()
+            console.log("Something went wrong!")
             }
         }
     }
