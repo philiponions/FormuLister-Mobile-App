@@ -3,8 +3,22 @@ import React from 'react'
 import FormulaItem from '../Components/FormulaItem'
 import { useNavigation } from '@react-navigation/native'
 
-const Menu = () => {
+const Menu = (props) => {
     const navigation = useNavigation()
+    const formulas = [
+        {
+            expression: "x^2 = y",
+            variables: ["x", "y"]
+        },
+        {
+            expression: "K = (1/2)*m*v^2",
+            variables: ["K", "m", "v"]
+        },
+        {
+            expression: "a^2 + b^2 = c^2",
+            variables: ["a", "b", "c"]
+        }
+    ]
 
     const goToAddFormula = () => {
         navigation.navigate('AddFormula')
@@ -22,13 +36,15 @@ const Menu = () => {
             </View>
         </TouchableOpacity>
         <ScrollView style={styles.scrollView}>
-            <FormulaItem/>
-            <FormulaItem/>
-            <FormulaItem/>
-            <FormulaItem/>
-            <FormulaItem/>
-            <FormulaItem/>
-            <FormulaItem/>
+            {
+                formulas.map((item) => {
+                    return <FormulaItem selectedFormula={props.selectedFormula} 
+                                        setSelectedFormula={props.setSelectedFormula}
+                                        expression={item.expression} 
+                                        variables={item.variables}/>
+                })
+            }
+
         </ScrollView>
     </SafeAreaView>
   )

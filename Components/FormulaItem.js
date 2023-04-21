@@ -2,11 +2,15 @@ import { View, Text, StyleSheet, Touchable, TouchableOpacity } from 'react-nativ
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 
-const FormulaItem = () => {
+const FormulaItem = (props) => {
     const navigation = useNavigation()
 
     const goToUseFormula = () => {
         navigation.navigate('UseFormula')
+        props.setSelectedFormula({
+            expression: props.expression,
+            variables: props.variables
+        })
     }
     
 

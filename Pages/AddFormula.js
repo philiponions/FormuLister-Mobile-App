@@ -9,6 +9,7 @@ const AddFormula = () => {
     const [submitted, setSubmitted] = useState(false)
     const isMountedRef = useRef(false);
 
+    // Do not trigger the alert if its the first time this page has rendered
     useEffect(() => {
         if (isMountedRef.current && submitted === true) {
             createVerifyAlert()
@@ -23,10 +24,11 @@ const AddFormula = () => {
         console.log(characters)
         const variablesFound = []
         for (let i = 0; i < characters.length; i++) {
+
+            // Regex expression for checking variables
             if (characters[i].match(/^[A-Za-z]+$/) && !variablesFound.includes(characters[i])) {
                 console.log("found")
                 variablesFound.push(characters[i])
-
             }
         }
         

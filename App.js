@@ -8,9 +8,15 @@ import Signup from './Pages/Signup';
 import Menu from './Pages/Menu';
 import UseFormula from './Pages/UseFormula';
 import AddFormula from './Pages/AddFormula';
+import { useEffect, useState } from 'react';
 
 
 export default function App() {
+  const [selectedFormula, setSelectedFormula] = useState({})
+
+  useEffect(() => {
+    console.log("change")
+  },[selectedFormula])
 
   return (
     <NavigationContainer>
@@ -28,12 +34,12 @@ export default function App() {
         <Stack.Screen
           name="Menu"          
           options={{ headerShown: false }}>
-            {(props) => <Menu/>}  
+            {(props) => <Menu selectedFormula={selectedFormula} setSelectedFormula={setSelectedFormula}/>}  
           </Stack.Screen> 
         <Stack.Screen
           name="UseFormula"          
           options={{ headerShown: false }}>
-            {(props) => <UseFormula/>}  
+            {(props) => <UseFormula selectedFormula={selectedFormula}/>}  
           </Stack.Screen>      
         <Stack.Screen
           name="AddFormula"          
