@@ -17,7 +17,15 @@ const Menu = (props) => {
         {
             expression: "a^2 + b^2 = c^2",
             variables: ["a", "b", "c"]
-        }
+        },
+        {
+            expression: "g = F/m",
+            variables: ["g", "F", "m"]
+        },
+        {
+            expression: "F = (G * x * y)/(r)**2",
+            variables: ["F", "G", "x", "y", "r"]
+        },
     ]
 
     const goToAddFormula = () => {

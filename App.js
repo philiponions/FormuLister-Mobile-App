@@ -14,10 +14,6 @@ import { useEffect, useState } from 'react';
 export default function App() {
   const [selectedFormula, setSelectedFormula] = useState({})
 
-  useEffect(() => {
-    console.log("change")
-  },[selectedFormula])
-
   return (
     <NavigationContainer>
       <Stack.Navigator>

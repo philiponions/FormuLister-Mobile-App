@@ -1,9 +1,12 @@
-import { View, Text, StyleSheet, StatusBar, Touchable, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { ActivityIndicator, View, Text, StyleSheet, StatusBar, TouchableOpacity, ScrollView } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
 import VariableInput from '../Components/VariableInput'
 import axios from 'axios'
 
 const UseFormula = (props) => {
+    const [loading, setLoading] = useState(false)
+    const timerRef = useRef(null);
+
     const [variables, setVariables] = useState(props.selectedFormula.variables.map((v) => {
         return {
             input: '',
@@ -11,7 +14,14 @@ const UseFormula = (props) => {
         }
     }));
     
+    useEffect(() => {
+        return () => {
+          clearTimeout(timerRef.current);
+        };
+      }, []);
+
     const expression = props.selectedFormula.expression;
+
     // Sends the equation and the current values in the text
     const sendEquation = () => {
         
@@ -38,54 +48,70 @@ const UseFormula = (props) => {
                 
                 // If the variable was found then replace it with user's input
                 if (variableFound) {
-                    result += variablesFilled[j].input;
-                    
+                    result += variablesFilled[j].input;                    
                     // Increment j to iterate through the next filled variable
                     j++;
                 }                 
-                else {
-                    
+                else {                    
                     // Otherwise just use the original character
                     result += letter;
                 }
             }
             
             // Replace that variable to x for the API to solve
-            
-            result = result.replace(/[a-zA-Z]/g, "x");    
+            const replacementIndex = result.search(/[a-zA-Z]/);
+            const varToReplace = result[replacementIndex]            
+            result = result.replace(varToReplace, "x");              
 
+            console.log(result)
+            
             // Make the api request to the solve
+            // Add a time out if the API solver is taking too long
+            timerRef.current = setTimeout(() => setLoading(true), 500)                    
             axios.post("http://10.0.2.2:5000/solve", {data: result})
                 .then((response) => {
-                    console.log(response.data);
+                    let newVariablesList = [...variables];                    
+                    
+                    // console.log("var to replace", varToReplace);
+                    const index = variables.findIndex((v) => v.variableName === varToReplace);                     
+                    newVariablesList[index].input = response.data.result.toString();
+                    console.log(response.data.result)
+                    setVariables(newVariablesList)
                 })
                 .catch((error) => {                    
                     console.log(error);
-                })            
+                })   
+                .finally(() => {
+                    console.log("done");
+                    setLoading(false);
+                    clearTimeout(timerRef.current);
+                })         
         }
         else {
             // If zero, then are no variables that arent filled
             // If more than one, there are too many that arent filled
-            console.log("Not one")
+            // TODO: send an alert
             }
         }
     }
 
   return (
     <View style={styles.container}>
+      {loading ? <View style={styles.overlay}><ActivityIndicator size="large"/></View> : <></>}
       <Text style={styles.title}>Use Formula</Text>
       <View style={styles.contentContainer}>
         <View style={styles.equationContainer}>
             <Text style={styles.equation}>{expression}</Text>
         </View>
+            {/* <ActivityIndicator size="large"/>         */}
         <ScrollView style={styles.variableBox}>
             {variables.map((v, index) => {
                 return <VariableInput key = {index}
-                                      setVariables={setVariables} 
-                                      variables={variables}
-                                      input={v.input}
-                                      index={index} 
-                                      variableName={v.variableName}/>
+                setVariables={setVariables} 
+                variables={variables}
+                input={v.input}
+                index={index} 
+                variableName={v.variableName}/>
             })}            
         </ScrollView>
       </View>
@@ -93,8 +119,9 @@ const UseFormula = (props) => {
         <View style={styles.solveButton}>
             <Text>Solve</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity>            
     </View>
+    
   )
 }
 
@@ -133,6 +160,17 @@ const styles = StyleSheet.create({
         padding: 20,
         borderWidth: 2,
         marginBottom: 100
+    },
+    overlay: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "gray",
+        opacity: 0.9,
     },
     container: {
           flex: 1,

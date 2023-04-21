@@ -11,8 +11,6 @@ const VariableInput = (props) => {
 
     // Set the item's input to the user's input
     newVariablesList[index].input = text
-
-    console.log(newVariablesList)
     props.setVariables(newVariablesList)
   }
     
