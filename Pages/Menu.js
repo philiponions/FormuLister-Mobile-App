@@ -16,7 +16,7 @@ const Menu = () => {
             <Text>Welcome!</Text>
             <Text>Username</Text>
         </View>
-        <TouchableOpacity style={styles.addButtonContainer}>
+        <TouchableOpacity style={styles.addButtonContainer} onPress={goToAddFormula}>
             <View style={styles.addButton}>
                 <Text>Add button</Text>
             </View>

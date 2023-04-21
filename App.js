@@ -7,6 +7,7 @@ import Login from './Pages/Login';
 import Signup from './Pages/Signup';
 import Menu from './Pages/Menu';
 import UseFormula from './Pages/UseFormula';
+import AddFormula from './Pages/AddFormula';
 
 
 export default function App() {
@@ -33,7 +34,12 @@ export default function App() {
           name="UseFormula"          
           options={{ headerShown: false }}>
             {(props) => <UseFormula/>}  
-          </Stack.Screen>         
+          </Stack.Screen>      
+        <Stack.Screen
+          name="AddFormula"          
+          options={{ headerShown: false }}>
+            {(props) => <AddFormula/>}  
+        </Stack.Screen>         
       </Stack.Navigator>
     </NavigationContainer>
   );

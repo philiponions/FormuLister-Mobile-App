@@ -10,20 +10,20 @@ const UseFormula = () => {
         <View style={styles.equationContainer}>
             <Text style={styles.equation}>K = (1/2)m*v^2</Text>
         </View>
-            <ScrollView style={styles.variableBox}>
-                <VariableInput variable={"K"}/>
-                <VariableInput variable={"M"}/>
-                <VariableInput variable={"v"}/>
-                <VariableInput variable={"K"}/>
-                <VariableInput variable={"M"}/>
-                <VariableInput variable={"v"}/>
-                <VariableInput variable={"K"}/>
-                <VariableInput variable={"M"}/>
-                <VariableInput variable={"v"}/>
-                <VariableInput variable={"K"}/>
-                <VariableInput variable={"M"}/>
-                <VariableInput variable={"v"}/>
-            </ScrollView>
+        <ScrollView style={styles.variableBox}>
+            <VariableInput variable={"K"}/>
+            <VariableInput variable={"M"}/>
+            <VariableInput variable={"v"}/>
+            <VariableInput variable={"K"}/>
+            <VariableInput variable={"M"}/>
+            <VariableInput variable={"v"}/>
+            <VariableInput variable={"K"}/>
+            <VariableInput variable={"M"}/>
+            <VariableInput variable={"v"}/>
+            <VariableInput variable={"K"}/>
+            <VariableInput variable={"M"}/>
+            <VariableInput variable={"v"}/>
+        </ScrollView>
       </View>
       <TouchableOpacity style={styles.solveButtonContainer}>
         <View style={styles.solveButton}>
@@ -62,7 +62,8 @@ const styles = StyleSheet.create({
     variableBox: {
         borderWidth: 2,
         height: 50,
-        width: "80%"        
+        width: "80%",
+        marginBottom: 50        
     },
     equationContainer: {
         padding: 20,
