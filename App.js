@@ -15,7 +15,7 @@ import axios from 'axios';
 
 export default function App() {
   const [initialised, setInitialised] = useState(false);  
-  const [initialRoute, setInitialRoute] = useState("Login")
+  const [initialRoute, setInitialRoute] = useState("")
   let isAuthenticated = false;
 
   getUserToken = async () => {
@@ -25,12 +25,13 @@ export default function App() {
       axios.post("http://10.0.2.2:8000/user/authenticate", {
         token: token
       }).then((response) => {
-        console.log(response.data)        
-      }).catch((err) => console.log(err))
-      .finally(() => {
-        isAuthenticated = true;
+        console.log(response.data)                
         setInitialRoute("Menu")
-      })
+        
+      }).catch((err) => {
+        console.log(err)
+        setInitialRoute("Login")
+      })       
     } catch (e) {
       console.log(e)
     }
@@ -52,7 +53,7 @@ export default function App() {
       }
   }, [initialRoute])
 
-  return initialised ? <Router initialRoute={"Menu"}/> : <View style={styles.loadingScreen}><ActivityIndicator size="large"/></View>
+  return initialised ? <Router initialRoute={initialRoute}/> : <View style={styles.loadingScreen}><ActivityIndicator size="large"/></View>
 
 }
   
