@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-nativ
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react'
 import {  useFonts } from 'expo-font'
-import { useNavigation } from '@react-navigation/native'
+import { StackActions, useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import uuid from 'react-native-uuid';
 
@@ -40,6 +40,13 @@ const Login = (props) => {
      }
   const goToLogin = () => {
      navigation.navigate('Menu');
+
+     // Replace the current navigation state with a new one
+     // index value will be current active route
+     navigation.reset({
+        index: 0,
+        routes: [{name: "Menu"}]
+     })
     }
    
 

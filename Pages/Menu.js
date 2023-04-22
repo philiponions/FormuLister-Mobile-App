@@ -32,11 +32,20 @@ const Menu = (props) => {
         navigation.navigate('AddFormula')
     }
 
+    const logOut = () => {
+        console.log("logging out")
+    }
+
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.userHeader}>
             <Text>Welcome!</Text>
             <Text>Username</Text>
+        </View>
+        <View style={styles.logoutButtonContainer}>
+            <TouchableOpacity style={styles.logoutButton} onPress={logOut}>
+                    <Text>Log out</Text>
+            </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.addButtonContainer} onPress={goToAddFormula}>
             <View style={styles.addButton}>
@@ -75,12 +84,20 @@ const styles = StyleSheet.create({
     addButtonContainer: {
         position: "absolute",
         bottom: 0,
-        zIndex: 1,    
-        backgroundColor: "#4287f5",
+        zIndex: 1,            
         flexDirection: "row",
         flex: 1
     },
     addButton: {
+        padding: 30,
+        backgroundColor: "#4287f5",
+    },
+    logoutButton: {
+        backgroundColor: "#787878",
         padding: 30
+    },
+    logoutButtonContainer: {             
+        flexDirection: "row",        
+        justifyContent: "flex-end"
     }
 });
