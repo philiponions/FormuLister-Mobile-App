@@ -1,17 +1,45 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
-import React from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from 'react'
 import {  useFonts } from 'expo-font'
 import { useNavigation } from '@react-navigation/native'
+import axios from 'axios'
+import uuid from 'react-native-uuid';
 
 
 const Login = (props) => {  
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  // Store the generated token in local storage
+  const createSession = async (token) => {
+      await AsyncStorage.setItem('token', token);
+    }
+    
+    const handleLogin = () => {
+    const token = uuid.v4();
+
+    axios.post("http://10.0.2.2:8000/user/login", {
+        username: username,
+        password: password,
+        token: token
+    }).then((response) => {
+        createSession(token)                        
+        goToLogin();
+        console.log(response.data)
+    }).catch((err) => {
+        console.log(err);
+    })
+
+  }
+
   const navigation = useNavigation()
   
   const goToSignup = () => {
-     navigation.navigate('Signup')
+     navigation.navigate('Signup');
      }
   const goToLogin = () => {
-     navigation.navigate('Menu')
+     navigation.navigate('Menu');
     }
    
 
@@ -23,20 +51,20 @@ const Login = (props) => {
         </View>
         
         <View style={styles.field}>
-            <TextInput style={styles.input} />
+            <TextInput style={styles.input} onChangeText={setUsername}/>
             <View style={styles.fieldType}>
                 <Text style={styles.fieldText}>Username</Text>
             </View>
         </View>
         
         <View style={styles.field}>
-            <TextInput style={styles.input} secureTextEntry={true}/>
+            <TextInput style={styles.input} onChangeText={setPassword} secureTextEntry={true}/>
             <View style={styles.fieldType}>
                 <Text style={styles.fieldText}>Password</Text>
             </View>
         </View>
         
-        <TouchableOpacity style={styles.loginButton} onPress={goToLogin}>
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
             <Text style={styles.loginText}>Login</Text>
         </TouchableOpacity>
         
