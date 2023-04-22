@@ -1,13 +1,16 @@
 import { View, Text, StyleSheet, StatusBar, Touchable, TouchableOpacity, ScrollView, TextInput } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import VariableInput from '../Components/VariableInput'
 import { Alert } from 'react-native';
+import { UserContext } from '../Context/UserContext';
+import axios from 'axios';
 
-const AddFormula = () => {
+const AddFormula = () => {    
     const [equation, setEquation] = useState("") 
     const [variables, setVariable] = useState([])
     const [submitted, setSubmitted] = useState(false)
     const isMountedRef = useRef(false);
+    const context = useContext(UserContext);
 
     // Do not trigger the alert if its the first time this page has rendered
     useEffect(() => {
@@ -43,8 +46,8 @@ const AddFormula = () => {
             onPress: () => setSubmitted(false),
             style: 'cancel',
         },
-        {text: 'Yes', onPress: () => console.log('OK Pressed')},
-        ]);
+        {text: 'Yes', onPress: () => handleSend()},
+    ]);
 
 
     const createUnsuccessfulAlert = () =>
@@ -65,6 +68,27 @@ const AddFormula = () => {
         else {
             createUnsuccessfulAlert()
         }
+    }
+
+    const handleSend = () => {
+
+        axios.post("http://10.0.2.2:8000/formula/add", {
+            id: context.userObj.id,
+            equation: equation,
+            variables: variables
+        }).then((response) => {
+            console.log(response.data);
+            
+            const newFormula = {
+                equation: equation,
+                variables: variables
+            }
+            let newFormulas = [...context.formulas, newFormula]
+            context.setFormulas(newFormulas)
+
+        }).catch((error) => {
+            console.log(error)
+        })
     }
 
   return (

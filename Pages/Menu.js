@@ -1,46 +1,60 @@
 import { View, Text, StyleSheet, SafeAreaView, StatusBar, ScrollView, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import FormulaItem from '../Components/FormulaItem'
 import { useNavigation } from '@react-navigation/native'
+import axios from 'axios'
+import { UserContext } from '../Context/UserContext'
 
 const Menu = (props) => {
+    const context = useContext(UserContext);    
+    
+    useEffect(() => {
+        console.log('formulas');
+        console.log(context)
+    }, [])
+
+    useEffect(() => {
+        axios.get(`http://10.0.2.2:8000/formula/get/${context.userObj.id}`).then((response) => {
+            context.setFormulas(response.data);        
+        }).catch((error) => {console.log(error)})
+      }, [context.userObj])
+
     const navigation = useNavigation()
-    const formulas = [
-        {
-            expression: "x^2 = y",
-            variables: ["x", "y"]
-        },
-        {
-            expression: "K = (1/2)*m*v^2",
-            variables: ["K", "m", "v"]
-        },
-        {
-            expression: "a^2 + b^2 = c^2",
-            variables: ["a", "b", "c"]
-        },
-        {
-            expression: "g = F/m",
-            variables: ["g", "F", "m"]
-        },
-        {
-            expression: "F = (G * x * y)/(r)**2",
-            variables: ["F", "G", "x", "y", "r"]
-        },
-    ]
 
     const goToAddFormula = () => {
-        navigation.navigate('AddFormula')
+        navigation.navigate('AddFormula');
     }
 
-    const logOut = () => {
-        console.log("logging out")
+    useEffect(() => {
+        console.log("token received:", props.token);
+    }, [props.token])
+
+    const logOut = async () => {
+        navigation.navigate('Menu');        
+        console.log(props.token);
+        axios.put("http://10.0.2.2:8000/user/logout", {
+            token: props.token
+        }, async (response) => {
+            props.setToken("")            
+            await AsyncStorage.setItem('token', null)            
+            console.log(response.data)
+        }).catch((error) => {
+            console.log(error)
+        })        
+
+        // Replace the current navigation state with a new one
+        // index value will be current active route
+        navigation.reset({
+            index: 0,
+            routes: [{name: "Login"}]
+        })
     }
 
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.userHeader}>
             <Text>Welcome!</Text>
-            <Text>Username</Text>
+            <Text>{context.userObj.username}</Text>
         </View>
         <View style={styles.logoutButtonContainer}>
             <TouchableOpacity style={styles.logoutButton} onPress={logOut}>
@@ -54,11 +68,14 @@ const Menu = (props) => {
         </TouchableOpacity>
         <ScrollView style={styles.scrollView}>
             {
-                formulas.map((item) => {
+                context.formulas.map((item) => {
                     return <FormulaItem selectedFormula={props.selectedFormula} 
                                         setSelectedFormula={props.setSelectedFormula}
-                                        expression={item.expression} 
-                                        variables={item.variables}/>
+                                        equation={item.equation} 
+                                        variables={item.variables}
+                                        formulas={context.formulas}
+                                        id={item._id}
+                                        setFormulas={context.setFormulas}/>
                 })
             }
 

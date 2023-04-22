@@ -8,24 +8,33 @@ import Signup from './Pages/Signup';
 import Menu from './Pages/Menu';
 import UseFormula from './Pages/UseFormula';
 import AddFormula from './Pages/AddFormula';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { UserContext } from './Context/UserContext';
 
 
 export default function App() {
   const [initialised, setInitialised] = useState(false);  
-  const [initialRoute, setInitialRoute] = useState("")
+  const [initialRoute, setInitialRoute] = useState("");
+  const [token, setToken] = useState("");
+  const [userObj, setUserObj] = useState({});
+  const [formulas, setFormulas] = useState([])
   let isAuthenticated = false;
+
+  useEffect(() => {
+    console.log(userObj)
+  }, [userObj])
 
   getUserToken = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      console.log(token)      
       axios.post("http://10.0.2.2:8000/user/authenticate", {
         token: token
       }).then((response) => {
         console.log(response.data)                
+        setUserObj({ username: response.data.username, id: response.data.id })        
+        setToken(token)
         setInitialRoute("Menu")
         
       }).catch((err) => {
@@ -53,16 +62,18 @@ export default function App() {
       }
   }, [initialRoute])
 
-  return initialised ? <Router initialRoute={initialRoute}/> : <View style={styles.loadingScreen}><ActivityIndicator size="large"/></View>
+  return initialised ? <UserContext.Provider value={{userObj, setUserObj, formulas, setFormulas}}>
+                          <Router initialRoute={initialRoute} 
+                                token={token} 
+                                setToken={setToken}/> 
+                        </UserContext.Provider>
+                     : <View style={styles.loadingScreen}><ActivityIndicator size="large"/></View>
 
 }
   
   
 const Router = (props) => {
   const [selectedFormula, setSelectedFormula] = useState({});  
-  useEffect(() => {
-    console.log("received", props.initialRoute)
-  }, [])
 
   return (
     <NavigationContainer>
@@ -70,7 +81,7 @@ const Router = (props) => {
         <Stack.Screen
           name="Login"          
           options={{ headerShown: false }}>
-            {(props) => <Login/>}  
+            {(props) => <Login token={props.token} setToken={props.setToken}/>}  
           </Stack.Screen>        
         <Stack.Screen
           name="Signup"
@@ -80,7 +91,10 @@ const Router = (props) => {
         <Stack.Screen
           name="Menu"          
           options={{ headerShown: false }}>
-            {(props) => <Menu selectedFormula={selectedFormula} setSelectedFormula={setSelectedFormula}/>}  
+            {() => <Menu selectedFormula={selectedFormula} 
+                              setSelectedFormula={setSelectedFormula}
+                              token={props.token}
+                              setToken={props.setToken}/>}  
           </Stack.Screen> 
         <Stack.Screen
           name="UseFormula"          

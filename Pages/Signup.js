@@ -5,10 +5,10 @@ import { useNavigation } from '@react-navigation/native'
 
 
 const Signup = (props) => {  
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   
   const goToSignup = () => {
-     navigation.navigate('Signup')
+     navigation.navigate('Signup');
      }
 
   return (

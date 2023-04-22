@@ -1,15 +1,17 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {  useFonts } from 'expo-font'
 import { StackActions, useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import uuid from 'react-native-uuid';
+import { UserContext } from '../Context/UserContext';
 
 
 const Login = (props) => {  
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const context = useContext(UserContext);
 
   // Store the generated token in local storage
   const createSession = async (token) => {
@@ -24,9 +26,13 @@ const Login = (props) => {
         password: password,
         token: token
     }).then((response) => {
-        createSession(token)                        
-        goToLogin();
-        console.log(response.data)
+        createSession(token);                    
+        goToLogin();        
+        console.log("Generated token", token)
+        axios.get(`http://10.0.2.2:8000/formula/get/${response.data.id}`).then((response) => {
+            context.setFormulas(response.data);   
+            props.setToken(token);     
+        }).catch((error) => {console.log(error)})
     }).catch((err) => {
         console.log(err);
     })

@@ -27,7 +27,7 @@ const UseFormula = (props) => {
         },      
         ]);
 
-    const expression = props.selectedFormula.expression;
+    const equation = props.selectedFormula.equation;
 
     // Sends the equation and the current values in the text
     const sendEquation = () => {
@@ -48,9 +48,9 @@ const UseFormula = (props) => {
             let result = ""
             let j = 0 // 
 
-            // Loop through expression string
-            for (let i = 0; i < expression.length; i++) {
-                const letter = expression[i];
+            // Loop through equation string
+            for (let i = 0; i < equation.length; i++) {
+                const letter = equation[i];
                 const variableFound = variablesFilled.find(v => v.variableName === letter);
                 
                 // If the variable was found then replace it with user's input
@@ -116,7 +116,7 @@ const UseFormula = (props) => {
       <Text style={styles.title}>Use Formula</Text>
       <View style={styles.contentContainer}>
         <View style={styles.equationContainer}>
-            <Text style={styles.equation}>{expression}</Text>
+            <Text style={styles.equation}>{equation}</Text>
         </View>
             {/* <ActivityIndicator size="large"/>         */}
         <ScrollView style={styles.variableBox}>
