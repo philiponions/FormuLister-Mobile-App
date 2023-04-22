@@ -62,10 +62,9 @@ export default function App() {
       }
   }, [initialRoute])
 
-  return initialised ? <UserContext.Provider value={{userObj, setUserObj, formulas, setFormulas}}>
+  return initialised ? <UserContext.Provider value={{token, setToken, userObj, setUserObj, formulas, setFormulas}}>
                           <Router initialRoute={initialRoute} 
-                                token={token} 
-                                setToken={setToken}/> 
+                                /> 
                         </UserContext.Provider>
                      : <View style={styles.loadingScreen}><ActivityIndicator size="large"/></View>
 
@@ -81,7 +80,7 @@ const Router = (props) => {
         <Stack.Screen
           name="Login"          
           options={{ headerShown: false }}>
-            {(props) => <Login token={props.token} setToken={props.setToken}/>}  
+            {(props) => <Login/>}  
           </Stack.Screen>        
         <Stack.Screen
           name="Signup"
@@ -92,9 +91,7 @@ const Router = (props) => {
           name="Menu"          
           options={{ headerShown: false }}>
             {() => <Menu selectedFormula={selectedFormula} 
-                              setSelectedFormula={setSelectedFormula}
-                              token={props.token}
-                              setToken={props.setToken}/>}  
+                              setSelectedFormula={setSelectedFormula}/>}  
           </Stack.Screen> 
         <Stack.Screen
           name="UseFormula"          

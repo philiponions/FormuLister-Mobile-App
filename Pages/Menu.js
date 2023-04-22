@@ -14,9 +14,14 @@ const Menu = (props) => {
     }, [])
 
     useEffect(() => {
-        axios.get(`http://10.0.2.2:8000/formula/get/${context.userObj.id}`).then((response) => {
-            context.setFormulas(response.data);        
-        }).catch((error) => {console.log(error)})
+        console.log("userObj")
+        console.log(context.userObj)   
+        if (!Object.keys(context.userObj).length == 0) {
+            console.log("grabbing with", context.userObj);
+            axios.get(`http://10.0.2.2:8000/formula/get/${context.userObj.id}`).then((response) => {            
+                context.setFormulas(response.data);        
+            }).catch((error) => {console.log(error)})
+        }     
       }, [context.userObj])
 
     const navigation = useNavigation()
@@ -26,16 +31,16 @@ const Menu = (props) => {
     }
 
     useEffect(() => {
-        console.log("token received:", props.token);
-    }, [props.token])
+        console.log("token received:", context.token);
+    }, [context.token])
 
     const logOut = async () => {
         navigation.navigate('Menu');        
-        console.log(props.token);
+        console.log(context.token);
         axios.put("http://10.0.2.2:8000/user/logout", {
-            token: props.token
+            token: context.token
         }, async (response) => {
-            props.setToken("")            
+            context.setToken("")            
             await AsyncStorage.setItem('token', null)            
             console.log(response.data)
         }).catch((error) => {
@@ -50,7 +55,25 @@ const Menu = (props) => {
         })
     }
 
-  return (
+    const renderFormulas = () => {
+        if (context.formulas) {
+            console.log("output")
+            console.log(context)
+            return context.formulas.map((item) => {
+                return <FormulaItem selectedFormula={props.selectedFormula} 
+                                    setSelectedFormula={props.setSelectedFormula}
+                                    equation={item.equation} 
+                                    variables={item.variables}
+                                    formulas={context.formulas}
+                                    id={item._id}
+                                    setFormulas={context.setFormulas}/>
+            })
+        } else {
+            return null;
+        }
+    }
+
+    return (
     <SafeAreaView style={styles.container}>
         <View style={styles.userHeader}>
             <Text>Welcome!</Text>
@@ -66,19 +89,8 @@ const Menu = (props) => {
                 <Text>Add button</Text>
             </View>
         </TouchableOpacity>
-        <ScrollView style={styles.scrollView}>
-            {
-                context.formulas.map((item) => {
-                    return <FormulaItem selectedFormula={props.selectedFormula} 
-                                        setSelectedFormula={props.setSelectedFormula}
-                                        equation={item.equation} 
-                                        variables={item.variables}
-                                        formulas={context.formulas}
-                                        id={item._id}
-                                        setFormulas={context.setFormulas}/>
-                })
-            }
-
+        <ScrollView style={styles.scrollView}>            
+            {renderFormulas()}
         </ScrollView>
     </SafeAreaView>
   )

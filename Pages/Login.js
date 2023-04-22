@@ -28,11 +28,10 @@ const Login = (props) => {
     }).then((response) => {
         createSession(token);                    
         goToLogin();        
-        console.log("Generated token", token)
-        axios.get(`http://10.0.2.2:8000/formula/get/${response.data.id}`).then((response) => {
-            context.setFormulas(response.data);   
-            props.setToken(token);     
-        }).catch((error) => {console.log(error)})
+        console.log("login data:")
+        console.log(response.data)
+        context.setUserObj(response.data);   
+        context.setToken(token);                     
     }).catch((err) => {
         console.log(err);
     })
