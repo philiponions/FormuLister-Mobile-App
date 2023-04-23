@@ -8,10 +8,11 @@ import Signup from './Pages/Signup';
 import Menu from './Pages/Menu';
 import UseFormula from './Pages/UseFormula';
 import AddFormula from './Pages/AddFormula';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { UserContext } from './Context/UserContext';
+import { useFonts } from 'expo-font';
 
 
 export default function App() {
@@ -20,7 +21,16 @@ export default function App() {
   const [token, setToken] = useState("");
   const [userObj, setUserObj] = useState({});
   const [formulas, setFormulas] = useState([])
-  let isAuthenticated = false;
+  
+  // Loads all the fonts. 
+  // This is asynchronous so make sure to have a boolean to check if its finished loading all fonts.
+  let [fontsLoaded] = useFonts({
+    'Poppins-Medium': require("./assets/fonts/Poppins-Medium.ttf"),
+    'Poppins-Regular': require("./assets/fonts/Poppins-Regular.ttf"),
+    'Poppins-SemiBold': require("./assets/fonts/Poppins-SemiBold.ttf"),
+    'Raleway-Medium': require("./assets/fonts/Raleway-Medium.ttf")
+  })
+
 
   getUserToken = async () => {
     try {
@@ -55,7 +65,7 @@ export default function App() {
       }
   }, [initialRoute])
 
-  return initialised ? <UserContext.Provider value={{token, setToken, userObj, setUserObj, formulas, setFormulas}}>
+  return initialised && fontsLoaded ? <UserContext.Provider value={{token, setToken, userObj, setUserObj, formulas, setFormulas}}>
                           <Router initialRoute={initialRoute} 
                                 /> 
                         </UserContext.Provider>
@@ -90,7 +100,9 @@ const Router = (props) => {
         <Stack.Screen
           name="UseFormula"          
           options={{ headerShown: false }}>
-            {(props) => <UseFormula cache={cache} setCache={setCache} selectedFormula={selectedFormula}/>}  
+            {(props) => <UseFormula cache={cache} 
+                                    setCache={setCache} 
+                                    selectedFormula={selectedFormula}/>}  
           </Stack.Screen>      
         <Stack.Screen
           name="AddFormula"          

@@ -17,8 +17,7 @@ const UseFormula = (props) => {
     }));
 
     useEffect(() => {        
-        const url = 'http://10.0.2.2:5000/render';
-
+        // Check if the image has been cached to prevent unecessary calls to api.
         if (props.cache[props.selectedFormula.id]) {                        
             setImageData(props.cache[props.selectedFormula.id]);   
         } else {
@@ -43,6 +42,7 @@ const UseFormula = (props) => {
                 })
                 .catch(error => {
                   console.error(error);
+                  createErrorAlert(error);
                 });
             }
         }, []);
@@ -115,6 +115,7 @@ const UseFormula = (props) => {
                 }
             }, 500)         
 
+            // Api call
             axios.post("http://10.0.2.2:5000/solve", {data: result})
                 .then((response) => {
                     let newVariablesList = [...variables];                    
@@ -125,6 +126,7 @@ const UseFormula = (props) => {
                 })
                 .catch((error) => {                    
                     console.log(error);
+                    createErrorAlert(error);
                 })   
                 .finally(() => {                    
                     apiCallFinished = true;

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useContext, useState } from 'react'
 import {  useFonts } from 'expo-font'
@@ -6,6 +6,9 @@ import { StackActions, useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import uuid from 'react-native-uuid';
 import { UserContext } from '../Context/UserContext';
+import { AntDesign } from '@expo/vector-icons';
+import Field from '../Components/Field';
+import Button from '../Components/Button';
 
 
 const Login = (props) => {  
@@ -53,35 +56,26 @@ const Login = (props) => {
     }
    
 
-  return (
-    <View style={{flex: 1}}>
+  return (  
+    <View style={{flex: 1, backgroundColor: "#ffffff"}}>
       <View style={styles.content}>
+        <View style={styles.header}></View>
         <View style={styles.titleContainer}>
             <Text style={styles.title}>FormuLister</Text>
-        </View>
-        
-        <View style={styles.field}>
-            <TextInput style={styles.input} onChangeText={setUsername}/>
-            <View style={styles.fieldType}>
-                <Text style={styles.fieldText}>Username</Text>
+            <View style={styles.imageContainer}>
+                <Image source={require('../assets/images/Login.jpg')} style={styles.loginImage}/>
             </View>
         </View>
-        
-        <View style={styles.field}>
-            <TextInput style={styles.input} onChangeText={setPassword} secureTextEntry={true}/>
-            <View style={styles.fieldType}>
-                <Text style={styles.fieldText}>Password</Text>
-            </View>
+        <View style={styles.fieldContainer}>            
+            <Text style={styles.loginHeader}>Login</Text>
+            <Field setField={setUsername} placeholder="Username" iconComponent={<AntDesign name="user" size={24} color="#a1a1a1" />}/>         
+            <Field setField={setPassword} secureTextEntry={true} placeholder="Password" iconComponent={<AntDesign name="lock" size={24} color="#a1a1a1" />}/>                                 
         </View>
-        
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginText}>Login</Text>
-        </TouchableOpacity>
-        
+        <Button action={handleLogin} text="Login"/>        
         <View style={styles.registerContainer}>
-            <Text>Don't have an account? </Text>
+            <Text style={styles.registerPrompt}>New to FormuLister? </Text>
             <TouchableOpacity onPress={goToSignup}>
-                <Text style={styles.signUpText}>Sign up</Text>
+                <Text style={styles.signUpText}>Register</Text>
             </TouchableOpacity>
         </View>
       </View>
@@ -90,23 +84,37 @@ const Login = (props) => {
 }
 
 const styles = StyleSheet.create({
-    loginButton: {
-        alignItems: "center",
-        backgroundColor: "#4287f5",
-        width: "80%",
-        paddingVertical: 20,
-        marginTop: 20
+    loginHeader: {
+        marginTop: 20,
+        fontSize: 30,        
+        color: "#001768",
+        fontFamily: "Poppins-SemiBold"
     },
+    loginImage: {
+        width: 300,
+        height: 200
+    },
+    textHeader: {
+        backgroundColor: "#00ff00",
+            
+    },
+    header: {
+        // marginTop: 100
+    },
+    registerPrompt: {
+        fontFamily: 'Poppins-Medium', 
+        fontSize: 15,
+        color: "#666666"
+    },    
     fieldText: {
         marginTop: 5,
         color: "#6b6b6b",
         marginBottom: 20        
     },
-    loginText: {
-        color: "white"
-    },
     signUpText: {
-        color: "#4287f5"
+        color: "#0027B1",
+        fontFamily: 'Poppins-Medium', 
+        fontSize: 15
     },
     fieldType: {
         alignItems: "center",        
@@ -122,18 +130,20 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     },
-    field: {        
-        width: "80%",
-        
-    },
     titleContainer: {                        
-        alignItems: "center",
-        marginBottom: 100
+        alignItems: "center",        
+    },
+    title: {
+        fontSize: 40,
+        color: "#001768",
+        fontFamily: "Poppins-SemiBold"
     },
     input: {        
-        margiHorizontal: 12,        
-        borderWidth: 1,
+        margiHorizontal: 12,                
         padding: 10,
+        width: "85%",
+        fontFamily: 'Raleway-Medium', 
+        fontSize: 18
       },
 })
 
