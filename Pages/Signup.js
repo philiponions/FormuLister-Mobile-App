@@ -21,8 +21,8 @@ const Signup = (props) => {
                 username: username,
                 email: email,
                 password: password,        
-            }).then((response) => {
-                console.log("Login successful");
+            }).then(() => {
+                console.log("Signup successful");
             }).catch((err) => {
                 console.log(err);
             }).finally(() => {
