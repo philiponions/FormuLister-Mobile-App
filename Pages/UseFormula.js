@@ -17,26 +17,36 @@ const UseFormula = (props) => {
     }));
 
     useEffect(() => {        
-        axios({
-            method: 'post',
-            url: 'http://10.0.2.2:5000/render',
-            responseType: 'arraybuffer', // Receive binary response
-            headers: {
-              'Content-Type': 'application/json',              
-            },
-            data: {
-              data: props.selectedFormula.equation
-            },
-          })
-            .then(response => {
-              // Convert the binary data to a base64-encoded string
-              const base64Image = `data:image/png;base64,${response.request._response.toString('base64')}`;
-              setImageData(base64Image);              
-            })
-            .catch(error => {
-              console.error(error);
-            });
+        const url = 'http://10.0.2.2:5000/render';
+
+        if (props.cache[props.selectedFormula.id]) {                        
+            setImageData(props.cache[props.selectedFormula.id]);   
+        } else {
+            axios({
+                method: 'post',
+                url: 'http://10.0.2.2:5000/render',
+                responseType: 'arraybuffer', // Receive binary response
+                headers: {
+                  'Content-Type': 'application/json',              
+                },
+                data: {
+                  data: props.selectedFormula.equation
+                },
+              })
+                .then(response => {                    
+                  // Convert the binary data to a base64-encoded string
+                  const base64Image = `data:image/png;base64,${response.request._response.toString('base64')}`;
+                  let newCache = props.cache;
+                  newCache[props.selectedFormula.id] = base64Image;
+                  props.setCache(newCache);
+                  setImageData(base64Image);              
+                })
+                .catch(error => {
+                  console.error(error);
+                });
+            }
         }, []);
+
       
     
     const createErrorAlert = () =>
@@ -95,8 +105,6 @@ const UseFormula = (props) => {
             const varToReplace = result[replacementIndex]            
             result = result.replace(varToReplace, "x");              
 
-            console.log(result)
-            
             // Make the api request to the solve
             // Add a time out if the API solver is taking too long
             let apiCallFinished = false;
@@ -112,15 +120,13 @@ const UseFormula = (props) => {
                     let newVariablesList = [...variables];                    
                     
                     const index = variables.findIndex((v) => v.variableName === varToReplace);                     
-                    newVariablesList[index].input = response.data.result.toString();
-                    console.log(response.data.result)
+                    newVariablesList[index].input = response.data.result.toString();                    
                     setVariables(newVariablesList)
                 })
                 .catch((error) => {                    
                     console.log(error);
                 })   
-                .finally(() => {
-                    console.log("done");
+                .finally(() => {                    
                     apiCallFinished = true;
                     setLoading(false);                    
                     clearTimeout(timerRef.current);

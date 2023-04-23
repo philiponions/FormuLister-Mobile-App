@@ -22,7 +22,7 @@ const Signup = (props) => {
                 email: email,
                 password: password,        
             }).then((response) => {
-                console.log(response.data);
+                console.log("Login successful");
             }).catch((err) => {
                 console.log(err);
             }).finally(() => {

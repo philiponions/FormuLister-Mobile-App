@@ -28,8 +28,6 @@ const Login = (props) => {
     }).then((response) => {
         createSession(token);                    
         goToLogin();        
-        console.log("login data:")
-        console.log(response.data)
         context.setUserObj(response.data);   
         context.setToken(token);                     
     }).catch((err) => {

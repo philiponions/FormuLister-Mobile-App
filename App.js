@@ -22,23 +22,17 @@ export default function App() {
   const [formulas, setFormulas] = useState([])
   let isAuthenticated = false;
 
-  useEffect(() => {
-    console.log(userObj)
-  }, [userObj])
-
   getUserToken = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
       axios.post("http://10.0.2.2:8000/user/authenticate", {
         token: token
-      }).then((response) => {
-        console.log(response.data)                
+      }).then((response) => {                  
         setUserObj({ username: response.data.username, id: response.data.id })        
         setToken(token)
         setInitialRoute("Menu")
         
-      }).catch((err) => {
-        console.log(err)
+      }).catch((err) => {        
         setInitialRoute("Login")
       })       
     } catch (e) {
@@ -54,8 +48,7 @@ export default function App() {
   
   useEffect(() => {
       if (isMountedRef.current) {
-          setInitialised(true)
-          console.log(initialRoute)
+          setInitialised(true)          
       }
       else {
           isMountedRef.current = true
@@ -73,6 +66,7 @@ export default function App() {
   
 const Router = (props) => {
   const [selectedFormula, setSelectedFormula] = useState({});  
+  const [cache, setCache] = useState({}); // Cache data if api has been called. Used in images for formula.
 
   return (
     <NavigationContainer>
@@ -96,7 +90,7 @@ const Router = (props) => {
         <Stack.Screen
           name="UseFormula"          
           options={{ headerShown: false }}>
-            {(props) => <UseFormula selectedFormula={selectedFormula}/>}  
+            {(props) => <UseFormula cache={cache} setCache={setCache} selectedFormula={selectedFormula}/>}  
           </Stack.Screen>      
         <Stack.Screen
           name="AddFormula"          

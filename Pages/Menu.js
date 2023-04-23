@@ -6,14 +6,9 @@ import axios from 'axios'
 import { UserContext } from '../Context/UserContext'
 
 const Menu = (props) => {
-    const context = useContext(UserContext);    
-    
-    useEffect(() => {        
-        console.log(context)
-    }, [])
+    const context = useContext(UserContext);   
 
-    useEffect(() => {        
-        console.log(context.userObj)   
+    useEffect(() => {                 
         if (!Object.keys(context.userObj).length == 0) {            
             axios.get(`http://10.0.2.2:8000/formula/get/${context.userObj.id}`).then((response) => {            
                 context.setFormulas(response.data);        
@@ -26,20 +21,15 @@ const Menu = (props) => {
     const goToAddFormula = () => {
         navigation.navigate('AddFormula');
     }
-
-    useEffect(() => {
-        console.log("token received:", context.token);
-    }, [context.token])
+    
 
     const logOut = async () => {
-        navigation.navigate('Menu');        
-        console.log(context.token);
+        navigation.navigate('Menu');                
         axios.put("http://10.0.2.2:8000/user/logout", {
             token: context.token
         }, async (response) => {
             context.setToken("")            
-            await AsyncStorage.setItem('token', null)            
-            console.log(response.data)
+            await AsyncStorage.setItem('token', null)                        
         }).catch((error) => {
             console.log(error)
         })        
@@ -53,9 +43,7 @@ const Menu = (props) => {
     }
 
     const renderFormulas = () => {
-        if (context.formulas) {
-            console.log("output")
-            console.log(context)
+        if (context.formulas) {            
             return context.formulas.map((item) => {
                 return <FormulaItem selectedFormula={props.selectedFormula} 
                                     setSelectedFormula={props.setSelectedFormula}

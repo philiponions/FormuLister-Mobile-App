@@ -13,10 +13,6 @@ const AddFormula = () => {
     const isMountedRef = useRef(false);
     const context = useContext(UserContext);
 
-    useEffect(() => {
-        console.log(new Date().toISOString());
-    }, [])
-
     // Do not trigger the alert if its the first time this page has rendered
     useEffect(() => {
         if (isMountedRef.current && submitted === true) {
@@ -28,15 +24,13 @@ const AddFormula = () => {
     }, [submitted])
 
     const detectVariables = () => {
-        characters = equation.split("")
-        console.log(characters)
+        characters = equation.split("");        
         const variablesFound = []
         for (let i = 0; i < characters.length; i++) {
 
             // Regex expression for checking variables
-            if (characters[i].match(/^[A-Za-z]+$/) && !variablesFound.includes(characters[i])) {
-                console.log("found")
-                variablesFound.push(characters[i])
+            if (characters[i].match(/^[A-Za-z]+$/) && !variablesFound.includes(characters[i])) {                
+                variablesFound.push(characters[i]);
             }
         }
         

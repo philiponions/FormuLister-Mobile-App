@@ -33,13 +33,10 @@ const FormulaItem = (props) => {
         navigation.navigate('UseFormula')
         props.setSelectedFormula({
             equation: props.equation,
-            variables: props.variables
+            variables: props.variables,
+            id: props.id
         })
-    }
-
-    useEffect(() => {
-        console.log(props.cre)
-    }, [])
+    }    
 
   return (
     <TouchableOpacity onPress={goToUseFormula} onLongPress={createConfirmationAlert} style={styles.container}>
