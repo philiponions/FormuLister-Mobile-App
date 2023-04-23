@@ -8,16 +8,13 @@ import { UserContext } from '../Context/UserContext'
 const Menu = (props) => {
     const context = useContext(UserContext);    
     
-    useEffect(() => {
-        console.log('formulas');
+    useEffect(() => {        
         console.log(context)
     }, [])
 
-    useEffect(() => {
-        console.log("userObj")
+    useEffect(() => {        
         console.log(context.userObj)   
-        if (!Object.keys(context.userObj).length == 0) {
-            console.log("grabbing with", context.userObj);
+        if (!Object.keys(context.userObj).length == 0) {            
             axios.get(`http://10.0.2.2:8000/formula/get/${context.userObj.id}`).then((response) => {            
                 context.setFormulas(response.data);        
             }).catch((error) => {console.log(error)})
@@ -66,6 +63,8 @@ const Menu = (props) => {
                                     variables={item.variables}
                                     formulas={context.formulas}
                                     id={item._id}
+                                    createdAt={item.createdAt}
+                                    title={item.title}
                                     setFormulas={context.setFormulas}/>
             })
         } else {

@@ -16,10 +16,6 @@ const UseFormula = (props) => {
         }
     }));
 
-    useEffect(() => {
-        console.log(imageData)
-    }, [imageData])
-
     useEffect(() => {        
         axios({
             method: 'post',

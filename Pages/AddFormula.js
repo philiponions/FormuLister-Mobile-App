@@ -6,9 +6,10 @@ import { UserContext } from '../Context/UserContext';
 import axios from 'axios';
 
 const AddFormula = () => {    
-    const [equation, setEquation] = useState("") 
-    const [variables, setVariable] = useState([])
-    const [submitted, setSubmitted] = useState(false)
+    const [equation, setEquation] = useState("") ;
+    const [variables, setVariable] = useState([]);
+    const [submitted, setSubmitted] = useState(false);
+    const [title, setTitle] = useState("")
     const isMountedRef = useRef(false);
     const context = useContext(UserContext);
 
@@ -75,7 +76,8 @@ const AddFormula = () => {
         axios.post("http://10.0.2.2:8000/formula/add", {
             id: context.userObj.id,
             equation: equation,
-            variables: variables
+            variables: variables,
+            title: title
         }).then((response) => {
             console.log(response.data);
             
@@ -97,8 +99,9 @@ const AddFormula = () => {
       <View style={styles.contentContainer}>
         <View>
             <Text>Image here</Text>
-        </View>
+        </View>        
         <Text style={styles.description}>Write you equation below and FormuLister will attempt to parse it</Text>
+        <TextInput style={styles.equationBox} onChangeText={setTitle} placeholder='Add a title!'/>
         <TextInput value={equation} onChangeText={setEquation} multiline={true} numberOfLines={5} style={styles.equationBox}></TextInput>
       </View>
 
