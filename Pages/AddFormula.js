@@ -45,7 +45,7 @@ const AddFormula = () => {
 
         const regex = new RegExp("[a-zA-Z_]+\\w*"); // Matches alphabets and optional underscore followed by digits
         const variablesFound = new Set();   
-        const terms = equation.split(/[\+\-\=\*\/\(\)]/); // Split equation into terms        
+        const terms = equation.split(/[\+\-\=\*\^\/\(\)]/).map(str => str.replace(/\s/g, '')); // Split equation into terms // Split equation into terms        
 
         terms.forEach(term => {
             console.log(term);

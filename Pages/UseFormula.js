@@ -76,36 +76,34 @@ const UseFormula = (props) => {
                 count++;
             }
 
+        console.log(count);
         if (count === 1) {            
-
-            // Get a new list variables that have values filled out
-            const variablesFilled = variables.filter((v) => v.input.length > 0 )                        
-            
-            let result = ""
-            let j = 0 // 
-
-            // Loop through equation string
-            for (let i = 0; i < equation.length; i++) {
-                const letter = equation[i];
-                const variableFound = variablesFilled.find(v => v.variableName === letter);
-                
-                // If the variable was found then replace it with user's input
-                if (variableFound) {
-                    result += variablesFilled[j].input;                    
-                    // Increment j to iterate through the next filled variable
-                    j++;
-                }                 
-                else {                    
-                    // Otherwise just use the original character
-                    result += letter;
-                }
+                        
+            // const playload = variables.map((item) => {})
+            let varToReplace = null;
+            function replaceVariables() {
+                // Create a regular expression to match variables in the equation
+                const regex = /[a-zA-Z]+(?:_[0-9]+)?/g;
+              
+                // Replace variables in the equation with values from the variables array
+                const replacedEquation = equation.replace(regex, match => {
+                  const variable = variables.find(v => v.variableName === match);
+                  if (variable) {
+                      if (!variable.input.length) {
+                        varToReplace = variable.variableName;  
+                      }
+                    return variable.input || "x"
+                  }
+                  else {
+                    varToReplace = variable.variableName;
+                    return "x";
+                  }                  
+                });
+              
+                // Return the equation with variables replaced
+                return replacedEquation;
             }
-            
-            // Replace that variable to x for the API to solve
-            const replacementIndex = result.search(/[a-zA-Z]/);
-            const varToReplace = result[replacementIndex];          
-            result = result.replace(varToReplace, "x");              
-
+                      
             // Make the api request to the solve
             // Add a time out if the API solver is taking too long
             let apiCallFinished = false;
@@ -116,15 +114,14 @@ const UseFormula = (props) => {
                 }
             }, 500)         
 
-            // Api call
+            const result = replaceVariables();
+            //Api call
             axios.post(`http://${config.url}:3001/solve`, {data: result})
                 .then((response) => {
                     let newVariablesList = [...variables];                    
-                    console.log("var to replace", varToReplace);
-                    const index = variables.findIndex((v) => v.variableName === varToReplace);                     
-                    console.log(index)
-                    // newVariablesList[index].input = response.data.result.toString();                    
-                    // setVariables(newVariablesList)
+                    const index = variables.findIndex((v) => v.variableName === varToReplace);                                         
+                    newVariablesList[index].input = response.data.result.toString();                    
+                    setVariables(newVariablesList)
                 })
                 .catch((error) => {                    
                     console.log(error);
