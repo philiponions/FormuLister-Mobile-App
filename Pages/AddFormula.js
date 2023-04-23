@@ -13,6 +13,10 @@ const AddFormula = () => {
     const isMountedRef = useRef(false);
     const context = useContext(UserContext);
 
+    useEffect(() => {
+        console.log(new Date().toISOString());
+    }, [])
+
     // Do not trigger the alert if its the first time this page has rendered
     useEffect(() => {
         if (isMountedRef.current && submitted === true) {
@@ -78,12 +82,13 @@ const AddFormula = () => {
             equation: equation,
             variables: variables,
             title: title
-        }).then((response) => {
-            console.log(response.data);
+        }).then((response) => {            
             
             const newFormula = {
                 equation: equation,
-                variables: variables
+                variables: variables,
+                title: title,
+                createdAt: new Date().toISOString()
             }
             let newFormulas = [...context.formulas, newFormula]
             context.setFormulas(newFormulas)
