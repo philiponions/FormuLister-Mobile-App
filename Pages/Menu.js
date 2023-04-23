@@ -7,6 +7,7 @@ import { UserContext } from '../Context/UserContext'
 import { SimpleLineIcons } from '@expo/vector-icons';
 import OptionsButton from '../Components/OptionsButton'
 import config from '../Utils.js/config'
+import { Toast } from 'react-native-toast-message/lib/src/Toast'
 
 const Menu = (props) => {
     const context = useContext(UserContext);   
@@ -93,6 +94,10 @@ const Menu = (props) => {
         <ScrollView style={styles.scrollView}>            
             {renderFormulas()}
         </ScrollView>
+        <Toast
+        position='top'
+        bottomOffset={20}
+      />
     </SafeAreaView>
   )
 }
@@ -147,7 +152,8 @@ const styles = StyleSheet.create({
         marginTop: StatusBar.currentHeight
     },
     formuaList: {
-        alignItems: "center"
+        alignItems: "center",
+        marginBottom: 12,
     },
     scrollView: {
         marginHorizontal: 20,

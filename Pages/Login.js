@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, useWindowDimensions } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useContext, useState } from 'react'
 import {  useFonts } from 'expo-font'
@@ -16,6 +16,7 @@ const Login = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const context = useContext(UserContext);
+  const windowHeight = useWindowDimensions().height;
 
   // Store the generated token in local storage
   const createSession = async (token) => {
@@ -40,7 +41,7 @@ const Login = (props) => {
 
   }
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   
   const goToSignup = () => {
      navigation.navigate('Signup');
@@ -58,28 +59,30 @@ const Login = (props) => {
    
 
   return (  
-    <View style={{flex: 1, backgroundColor: "#ffffff"}}>
-      <View style={styles.content}>
-        <View style={styles.header}></View>
-        <View style={styles.titleContainer}>
-            <Text style={styles.title}>FormuLister</Text>
-            <View style={styles.imageContainer}>
-                <Image source={require('../assets/images/Login.jpg')} style={styles.loginImage}/>
+    <View style={{flex: 1, backgroundColor: "#ffffff", minHeight: Math.round(windowHeight)}}>
+        <KeyboardAvoidingView style={{flex: 1}} behavior='padding'>
+        <View style={styles.content}>
+            <View style={styles.header}></View>
+            <View style={styles.titleContainer}>
+                <Text style={styles.title}>FormuLister</Text>
+                <View style={styles.imageContainer}>
+                    <Image source={require('../assets/images/Login.jpg')} style={styles.loginImage}/>
+                </View>
             </View>
+            <View style={styles.fieldContainer}>            
+                <Text style={styles.loginHeader}>Login</Text>
+                <Field setField={setUsername} placeholder="Username" iconComponent={<AntDesign name="user" size={24} color="#a1a1a1" />}/>         
+                <Field setField={setPassword} secureTextEntry={true} placeholder="Password" iconComponent={<AntDesign name="lock" size={24} color="#a1a1a1" />}/>                                 
+            </View>
+            <Button action={handleLogin} text="Login"/>        
         </View>
-        <View style={styles.fieldContainer}>            
-            <Text style={styles.loginHeader}>Login</Text>
-            <Field setField={setUsername} placeholder="Username" iconComponent={<AntDesign name="user" size={24} color="#a1a1a1" />}/>         
-            <Field setField={setPassword} secureTextEntry={true} placeholder="Password" iconComponent={<AntDesign name="lock" size={24} color="#a1a1a1" />}/>                                 
-        </View>
-        <Button action={handleLogin} text="Login"/>        
         <View style={styles.registerContainer}>
             <Text style={styles.registerPrompt}>New to FormuLister? </Text>
             <TouchableOpacity onPress={goToSignup}>
                 <Text style={styles.signUpText}>Register</Text>
             </TouchableOpacity>
         </View>
-      </View>
+        </KeyboardAvoidingView>
     </View>
   )
 }
@@ -124,7 +127,9 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         marginBottom: 20,
-        flexDirection: "row"
+        flexDirection: "row",
+        width: "100%",
+        justifyContent: "center"
     },
     content: {
         flex: 1,

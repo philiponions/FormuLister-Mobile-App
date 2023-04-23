@@ -24,7 +24,7 @@ const UseFormula = (props) => {
         } else {
             axios({
                 method: 'post',
-                url: `http://${config.url}:5000/render`,
+                url: `http://${config.url}:3001/render`,
                 responseType: 'arraybuffer', // Receive binary response
                 headers: {
                   'Content-Type': 'application/json',              
@@ -103,7 +103,7 @@ const UseFormula = (props) => {
             
             // Replace that variable to x for the API to solve
             const replacementIndex = result.search(/[a-zA-Z]/);
-            const varToReplace = result[replacementIndex]            
+            const varToReplace = result[replacementIndex];          
             result = result.replace(varToReplace, "x");              
 
             // Make the api request to the solve
@@ -117,13 +117,14 @@ const UseFormula = (props) => {
             }, 500)         
 
             // Api call
-            axios.post(`http://${config.url}:5000/solve`, {data: result})
+            axios.post(`http://${config.url}:3001/solve`, {data: result})
                 .then((response) => {
                     let newVariablesList = [...variables];                    
-                    
+                    console.log("var to replace", varToReplace);
                     const index = variables.findIndex((v) => v.variableName === varToReplace);                     
-                    newVariablesList[index].input = response.data.result.toString();                    
-                    setVariables(newVariablesList)
+                    console.log(index)
+                    // newVariablesList[index].input = response.data.result.toString();                    
+                    // setVariables(newVariablesList)
                 })
                 .catch((error) => {                    
                     console.log(error);
@@ -139,7 +140,8 @@ const UseFormula = (props) => {
             // If zero, then are no variables that arent filled
             // If more than one, there are too many that arent filled
             // createErrorAlert()
-            console.log("Something went wrong!")
+            console.log("This");
+            console.log("Something went wrong!");
             }
         }
     }

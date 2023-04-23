@@ -22,8 +22,6 @@ export default function App() {
   const [token, setToken] = useState("");
   const [userObj, setUserObj] = useState({});
   const [formulas, setFormulas] = useState([]);
-  const url = config.url;
-  console.log(url);
   
   // Loads all the fonts. 
   // This is asynchronous so make sure to have a boolean to check if its finished loading all fonts.

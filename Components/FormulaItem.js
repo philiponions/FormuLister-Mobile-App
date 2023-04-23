@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { UserContext } from '../Context/UserContext'
 import { FontAwesome } from '@expo/vector-icons';
+import config from '../Utils.js/config'
 
 const FormulaItem = (props) => {
     const navigation = useNavigation();
@@ -42,7 +43,7 @@ const FormulaItem = (props) => {
   return (
     <TouchableOpacity onPress={goToUseFormula} onLongPress={createConfirmationAlert} style={styles.container}>        
         <View style={styles.infoContainer}>            
-            <Text style={styles.titleText}>{props.title ? props.title : "Formula"}</Text>
+            <Text style={styles.titleText} numberOfLines={1} ellipsizeMode='tail'>{props.title ? props.title : "Formula"}</Text>
             <View style={styles.dateContainer}>
                 <Text style={styles.dateText}>Date added:</Text>                        
                 <Text style={styles.dateText}>{props.createdAt ? props.createdAt.split("T")[0] : ""}</Text>                        
@@ -98,7 +99,8 @@ const styles = StyleSheet.create({
         borderBottomStartRadius: 17,   
         backgroundColor: "#ffffff",
         justifyContent: "space-between",
-        maxHeight: 120,        
+        maxHeight: 120,  
+        wordWrap: "break-word"      
         // alignSelf: "baseline"          
     },
     dateContainer: {
