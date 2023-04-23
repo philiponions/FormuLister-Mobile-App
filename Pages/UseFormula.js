@@ -1,11 +1,13 @@
-import { ActivityIndicator, View, Text, StyleSheet, StatusBar, TouchableOpacity, ScrollView, Alert } from 'react-native'
+import { Image, ActivityIndicator, View, Text, StyleSheet, StatusBar, TouchableOpacity, ScrollView, Alert } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import VariableInput from '../Components/VariableInput'
 import axios from 'axios'
 
+
 const UseFormula = (props) => {
     const [loading, setLoading] = useState(false)    
     const timerRef = useRef(null);
+    const [imageData, setImageData] = useState(null);
 
     const [variables, setVariables] = useState(props.selectedFormula.variables.map((v) => {
         return {
@@ -13,6 +15,33 @@ const UseFormula = (props) => {
             variableName: v
         }
     }));
+
+    useEffect(() => {
+        console.log(imageData)
+    }, [imageData])
+
+    useEffect(() => {        
+        axios({
+            method: 'post',
+            url: 'http://10.0.2.2:5000/render',
+            responseType: 'arraybuffer', // Receive binary response
+            headers: {
+              'Content-Type': 'application/json',              
+            },
+            data: {
+              data: props.selectedFormula.equation
+            },
+          })
+            .then(response => {
+              // Convert the binary data to a base64-encoded string
+              const base64Image = `data:image/png;base64,${response.request._response.toString('base64')}`;
+              setImageData(base64Image);              
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        }, []);
+      
     
     const createErrorAlert = () =>
         Alert.alert('Error', 'Something went wrong', [
@@ -113,12 +142,9 @@ const UseFormula = (props) => {
   return (
     <View style={styles.container}>
       {loading ? <View style={styles.overlay}><ActivityIndicator size="large"/></View> : <></>}
-      <Text style={styles.title}>Use Formula</Text>
-      <View style={styles.contentContainer}>
-        <View style={styles.equationContainer}>
-            <Text style={styles.equation}>{equation}</Text>
-        </View>
-            {/* <ActivityIndicator size="large"/>         */}
+      <Text style={styles.title}>Use Formula</Text>  
+      <View style={styles.contentContainer}>        
+        <Image source={{uri: imageData}} style={{width: 300, height: 100}}/>
         <ScrollView style={styles.variableBox}>
             {variables.map((v, index) => {
                 return <VariableInput key = {index}
