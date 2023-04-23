@@ -28,7 +28,9 @@ export default function App() {
     'Poppins-Medium': require("./assets/fonts/Poppins-Medium.ttf"),
     'Poppins-Regular': require("./assets/fonts/Poppins-Regular.ttf"),
     'Poppins-SemiBold': require("./assets/fonts/Poppins-SemiBold.ttf"),
-    'Raleway-Medium': require("./assets/fonts/Raleway-Medium.ttf")
+    'Raleway-Medium': require("./assets/fonts/Raleway-Medium.ttf"),
+    'Raleway-SemiBold': require("./assets/fonts/Raleway-SemiBold.ttf"),
+    'Raleway-Bold': require("./assets/fonts/Raleway-Bold.ttf"),
   })
 
 

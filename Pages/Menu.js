@@ -4,6 +4,8 @@ import FormulaItem from '../Components/FormulaItem'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { UserContext } from '../Context/UserContext'
+import { SimpleLineIcons } from '@expo/vector-icons';
+import OptionsButton from '../Components/OptionsButton'
 
 const Menu = (props) => {
     const context = useContext(UserContext);   
@@ -45,15 +47,19 @@ const Menu = (props) => {
     const renderFormulas = () => {
         if (context.formulas) {            
             return context.formulas.map((item) => {
-                return <FormulaItem selectedFormula={props.selectedFormula} 
-                                    setSelectedFormula={props.setSelectedFormula}
-                                    equation={item.equation} 
-                                    variables={item.variables}
-                                    formulas={context.formulas}
-                                    id={item._id}
-                                    createdAt={item.createdAt}
-                                    title={item.title}
-                                    setFormulas={context.setFormulas}/>
+                return <View style={styles.formuaList}>
+                    <FormulaItem                                     
+                                        selectedFormula={props.selectedFormula} 
+                                        setSelectedFormula={props.setSelectedFormula}
+                                        equation={item.equation} 
+                                        variables={item.variables}
+                                        formulas={context.formulas}
+                                        id={item._id}
+                                        createdAt={item.createdAt}
+                                        title={item.title}
+                                        setFormulas={context.setFormulas}/>
+                </View>
+                
             })
         } else {
             return null;
@@ -63,17 +69,24 @@ const Menu = (props) => {
     return (
     <SafeAreaView style={styles.container}>
         <View style={styles.userHeader}>
-            <Text>Welcome!</Text>
-            <Text>{context.userObj.username}</Text>
+            <View style={styles.profileContainer}>
+                <View style={styles.circle}/>
+                <View style={styles.textHeader}>
+                    <Text style={styles.welcomeText}>Welcome!</Text>
+                    <Text style={styles.userText}>{context.userObj.username}</Text>
+                </View>            
+            </View>
+            <OptionsButton action={logOut}/>
         </View>
-        <View style={styles.logoutButtonContainer}>
-            <TouchableOpacity style={styles.logoutButton} onPress={logOut}>
-                    <Text>Log out</Text>
-            </TouchableOpacity>
+        <View style={styles.formulaHeader}>
+            <View>
+                <Text style={styles.formulasText}>Your</Text>
+                <Text style={styles.formulasText}>Formulas 🚀 </Text>
+            </View>
         </View>
         <TouchableOpacity style={styles.addButtonContainer} onPress={goToAddFormula}>
             <View style={styles.addButton}>
-                <Text>Add button</Text>
+                <Text style={styles.plus}>+</Text>
             </View>
         </TouchableOpacity>
         <ScrollView style={styles.scrollView}>            
@@ -87,11 +100,53 @@ export default Menu
 
 const styles = StyleSheet.create({
     userHeader: {
-        margin: 30
+        marginTop: 30,
+        marginHorizontal: 30,
+        marginBottom: 10,
+        padding: 15,
+        borderRadius: 15,                
+        shadowColor: 'black',
+        shadowOpacity: 0.26,
+        shadowOffset: { width: 0, height: 2},
+        shadowRadius: 10,
+        elevation: 5,     
+        backgroundColor: 'white',
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },    
+    profileContainer: {
+        flexDirection: "row"
+    },  
+    textHeader: {
+        marginLeft: 10
+    },
+    formulaHeader: {
+        alignItems: "center"
+    },
+    formulasText: {
+        fontSize: 50,
+        fontFamily: "Raleway-Bold",
+        color: "#181E55",        
+    },
+    circle: {
+        backgroundColor: "#27C100",
+        padding: 25,
+        borderRadius: 100
+    },
+    welcomeText: {
+        fontFamily: "Raleway-Medium",
+        color: "#585858"
+    },
+    userText: {
+        fontFamily: "Raleway-SemiBold",   
+        color: "#000742"    
     },
     container: {
         flex: 1,
         marginTop: StatusBar.currentHeight
+    },
+    formuaList: {
+        alignItems: "center"
     },
     scrollView: {
         marginHorizontal: 20,
@@ -100,18 +155,25 @@ const styles = StyleSheet.create({
     addButtonContainer: {
         position: "absolute",
         bottom: 0,
-        zIndex: 1,            
-        flexDirection: "row",
-        flex: 1
+        left: "75%",
+        marginBottom: 20, 
+        zIndex: 1,                            
+        flex: 1,
+    },
+    plus: {
+        color: "#ffffff", 
+        fontSize: 50
     },
     addButton: {
-        padding: 30,
-        backgroundColor: "#4287f5",
-    },
-    logoutButton: {
-        backgroundColor: "#787878",
-        padding: 30
-    },
+        elevation: 5,        
+        width: 75,
+        height: 75,
+        borderRadius: 100,
+        backgroundColor: "#1954ED",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center"
+    },    
     logoutButtonContainer: {             
         flexDirection: "row",        
         justifyContent: "flex-end"

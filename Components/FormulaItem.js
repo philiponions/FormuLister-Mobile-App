@@ -3,6 +3,7 @@ import React, { useContext, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { UserContext } from '../Context/UserContext'
+import { FontAwesome } from '@expo/vector-icons';
 
 const FormulaItem = (props) => {
     const navigation = useNavigation();
@@ -39,10 +40,17 @@ const FormulaItem = (props) => {
     }    
 
   return (
-    <TouchableOpacity onPress={goToUseFormula} onLongPress={createConfirmationAlert} style={styles.container}>
+    <TouchableOpacity onPress={goToUseFormula} onLongPress={createConfirmationAlert} style={styles.container}>        
         <View style={styles.infoContainer}>            
             <Text style={styles.titleText}>{props.title ? props.title : "Formula"}</Text>
-            <Text style={styles.titleText}>{props.createdAt ? props.createdAt.split("T")[0] : ""}</Text>                        
+            <View style={styles.dateContainer}>
+                <Text style={styles.dateText}>Date added:</Text>                        
+                <Text style={styles.dateText}>{props.createdAt ? props.createdAt.split("T")[0] : ""}</Text>                        
+            </View>
+        </View>  
+        <View style={styles.viewFormulaContainer}>            
+                <Text style={styles.viewFormula}>View Formula</Text>
+                <FontAwesome name="angle-right" size={27} color="white" />            
         </View>
     </TouchableOpacity>
   )
@@ -50,18 +58,51 @@ const FormulaItem = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#ffffff",
-        paddingVertical: 80,
-        marginVertical: 10,
-        alignItems: "center",    
-        borderRadius: 10,
-        elevation: 5       
+        backgroundColor: "#1C5BFF",
+        marginTop: 10,
+        width: "98%",
+        height: 155,
+        borderRadius: 17,
+        elevation: 5,                    
+    },
+    dateText: {
+        fontFamily: "Poppins-Regular",
+        fontSize: 15,
+        color: "#6E7279"
     },
     titleText: {
-        fontSize: 24
+        fontSize: 24,
+        color: "#404C5C",
+        margin: 15,
+        fontFamily: "Poppins-SemiBold"
     },
-    infoContainer: {
-        alignItems: "center"
+    viewFormulaContainer: {        
+        marginHorizontal: 20,
+        alignItems: "center",
+        flexDirection: "row",
+        justifyContent: "flex-end"        
+    },
+    viewFormula: {        
+        fontFamily: "Poppins-Medium",
+        marginLeft: 40,        
+        fontSize: 17,
+        marginTop: 5,
+        color: "#ffffff",
+        marginRight: 10,
+    },  
+    infoContainer: {              
+        flex: 1,     
+        borderTopEndRadius: 17,
+        borderTopStartRadius: 17,
+        borderBottomEndRadius: 17,   
+        borderBottomStartRadius: 17,   
+        backgroundColor: "#ffffff",
+        justifyContent: "space-between",
+        maxHeight: 120,        
+        // alignSelf: "baseline"          
+    },
+    dateContainer: {
+        marginLeft: 15,        
     }
 })
 
