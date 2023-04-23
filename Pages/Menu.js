@@ -6,13 +6,14 @@ import axios from 'axios'
 import { UserContext } from '../Context/UserContext'
 import { SimpleLineIcons } from '@expo/vector-icons';
 import OptionsButton from '../Components/OptionsButton'
+import config from '../Utils.js/config'
 
 const Menu = (props) => {
     const context = useContext(UserContext);   
 
     useEffect(() => {                 
         if (!Object.keys(context.userObj).length == 0) {            
-            axios.get(`http://10.0.2.2:8000/formula/get/${context.userObj.id}`).then((response) => {            
+            axios.get(`http://${config.url}:8000/formula/get/${context.userObj.id}`).then((response) => {            
                 context.setFormulas(response.data);        
             }).catch((error) => {console.log(error)})
         }     
@@ -27,7 +28,7 @@ const Menu = (props) => {
 
     const logOut = async () => {
         navigation.navigate('Menu');                
-        axios.put("http://10.0.2.2:8000/user/logout", {
+        axios.put(`http://${config.url}:8000/user/logout`, {
             token: context.token
         }, async (response) => {
             context.setToken("")            

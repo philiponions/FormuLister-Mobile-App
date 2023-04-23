@@ -4,6 +4,7 @@ import VariableInput from '../Components/VariableInput'
 import { Alert } from 'react-native';
 import { UserContext } from '../Context/UserContext';
 import axios from 'axios';
+import config from '../Utils.js/config';
 
 const AddFormula = () => {    
     const [equation, setEquation] = useState("") ;
@@ -71,7 +72,7 @@ const AddFormula = () => {
 
     const handleSend = () => {
 
-        axios.post("http://10.0.2.2:8000/formula/add", {
+        axios.post(`http://${config.url}:8000/formula/add`, {
             id: context.userObj.id,
             equation: equation,
             variables: variables,

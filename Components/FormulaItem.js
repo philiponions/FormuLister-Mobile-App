@@ -14,7 +14,7 @@ const FormulaItem = (props) => {
         props.setFormulas(newList);
 
         // Delete the formula in the database.
-        axios.put(`http://10.0.2.2:8000/formula/users/${context.userObj.id}/formulas/${props.id}`).catch((response) => {
+        axios.put(`http://${config.url}:8000/formula/users/${context.userObj.id}/formulas/${props.id}`).catch((response) => {
             console.log(response.message);
         })
     }

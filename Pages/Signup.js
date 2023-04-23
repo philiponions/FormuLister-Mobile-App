@@ -7,6 +7,7 @@ import Field from '../Components/Field'
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import Button from '../Components/Button'
+import config from '../Utils.js/config'
 
 
 const Signup = (props) => {  
@@ -21,7 +22,7 @@ const Signup = (props) => {
     if (password === confirmPassword) {
         if (password.length >= 6) {
             // Api call good to go
-            axios.post("http://10.0.2.2:8000/user/register", {
+            axios.post(`http://${config.url}:8000/user/register`, {
                 username: username,
                 email: email,
                 password: password,        

@@ -9,6 +9,7 @@ import { UserContext } from '../Context/UserContext';
 import { AntDesign } from '@expo/vector-icons';
 import Field from '../Components/Field';
 import Button from '../Components/Button';
+import config from '../Utils.js/config';
 
 
 const Login = (props) => {  
@@ -24,7 +25,7 @@ const Login = (props) => {
     const handleLogin = () => {
     const token = uuid.v4();
 
-    axios.post("http://10.0.2.2:8000/user/login", {
+    axios.post(`http://${config.url}:8000/user/login`, {
         username: username,
         password: password,
         token: token

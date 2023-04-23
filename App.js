@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { UserContext } from './Context/UserContext';
 import { useFonts } from 'expo-font';
+import config from './Utils.js/config';
 
 
 export default function App() {
@@ -20,7 +21,9 @@ export default function App() {
   const [initialRoute, setInitialRoute] = useState("");
   const [token, setToken] = useState("");
   const [userObj, setUserObj] = useState({});
-  const [formulas, setFormulas] = useState([])
+  const [formulas, setFormulas] = useState([]);
+  const url = config.url;
+  console.log(url);
   
   // Loads all the fonts. 
   // This is asynchronous so make sure to have a boolean to check if its finished loading all fonts.
@@ -37,7 +40,7 @@ export default function App() {
   getUserToken = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      axios.post("http://10.0.2.2:8000/user/authenticate", {
+      axios.post(`http://${config.url}:8000/user/authenticate`, {
         token: token
       }).then((response) => {                  
         setUserObj({ username: response.data.username, id: response.data.id })        

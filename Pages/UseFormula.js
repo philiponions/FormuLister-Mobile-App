@@ -2,6 +2,7 @@ import { Image, ActivityIndicator, View, Text, StyleSheet, StatusBar, TouchableO
 import React, { useEffect, useRef, useState } from 'react'
 import VariableInput from '../Components/VariableInput'
 import axios from 'axios'
+import config from '../Utils.js/config'
 
 
 const UseFormula = (props) => {
@@ -23,7 +24,7 @@ const UseFormula = (props) => {
         } else {
             axios({
                 method: 'post',
-                url: 'http://10.0.2.2:5000/render',
+                url: `http://${config.url}:5000/render`,
                 responseType: 'arraybuffer', // Receive binary response
                 headers: {
                   'Content-Type': 'application/json',              
@@ -116,7 +117,7 @@ const UseFormula = (props) => {
             }, 500)         
 
             // Api call
-            axios.post("http://10.0.2.2:5000/solve", {data: result})
+            axios.post(`http://${config.url}:5000/solve`, {data: result})
                 .then((response) => {
                     let newVariablesList = [...variables];                    
                     
