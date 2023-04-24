@@ -16,5 +16,23 @@ function detectVariables(str) {
     return variables;
 }
 
+function replaceVariables (equation, variables) {
+  // Detect all the variables in the equation
+   const found = detectVariables(equation);     
+   let newEquation = equation;
+
+   found.forEach((variable) => {
+       const index = variables.findIndex((e) => e.variableName === variable);
+       
+       if (variables[index].input.length) {
+           newEquation = newEquation.replace(variable, variables[index].input);
+       } else {
+           newEquation = newEquation.replace(variable, "x");
+       }                    
+   })
+   return newEquation;
+}
+
+module.exports.replaceVariables = replaceVariables;
 module.exports.detectVariables = detectVariables;
   

@@ -11,6 +11,7 @@ import VerifyContent from '../Components/VerifyContent';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import Unsuccessful from '../Components/Unsuccessful';
+import { detectVariables } from '../utils/variables';
 
 
 
@@ -39,23 +40,23 @@ const AddFormula = () => {
         }
     }, [submitted])
 
-    const detectVariables = () => {
-        characters = equation.split("");        
-        // const variablesFound = [];
+    // const detectVariables = () => {
+    //     characters = equation.split("");        
+    //     // const variablesFound = [];
 
-        const regex = new RegExp("[a-zA-Z_]+\\w*"); // Matches alphabets and optional underscore followed by digits
-        const variablesFound = new Set();   
-        const terms = equation.split(/[\+\-\=\*\^\/\(\)]/).map(str => str.replace(/\s/g, '')); // Split equation into terms // Split equation into terms        
+    //     const regex = new RegExp("[a-zA-Z_]+\\w*"); // Matches alphabets and optional underscore followed by digits
+    //     const variablesFound = new Set();   
+    //     const terms = equation.split(/[\+\-\=\*\^\/\(\)]/).map(str => str.replace(/\s/g, '')); // Split equation into terms // Split equation into terms        
 
-        terms.forEach(term => {            
-            if (term.match(regex)) {                
-              variablesFound.add(term);
-            }
-        });
+    //     terms.forEach(term => {            
+    //         if (term.match(regex)) {                
+    //           variablesFound.add(term);
+    //         }
+    //     });
 
-        setSubmitted(true);
-        setVariable(Array.from(variablesFound));
-    }
+    //     setSubmitted(true);
+    //     setVariable(Array.from(variablesFound));
+    // }
 
     const createUnsuccessfulAlert = () =>
         Alert.alert('Parsing Unsuccessful', `Looks like FormuLister could not parse your formula.`, [
@@ -70,7 +71,9 @@ const AddFormula = () => {
 
     const processEquation = () => {
         if (equation.length) {
-            detectVariables();
+            setSubmitted(true);
+            const foundVariables = detectVariables(equation);
+            setVariable(foundVariables);
 
             axios({
                 method: 'post',

@@ -5,6 +5,7 @@ import axios from 'axios'
 import config from '../utils/config'
 import ModalPopup from '../Components/ModalPopup'
 import Unsuccessful from '../Components/Unsuccessful'
+import { detectVariables, replaceVariables } from '../utils/variables'
 
 
 const UseFormula = (props) => {
@@ -77,38 +78,11 @@ const UseFormula = (props) => {
         for (i = 0; i < variables.length; i++) {            
             if (variables[i].input.length === 0) {
                 count++;
-            }
-            console.log(count);
+            }            
         }
         
         if (count === 1) {            
-            console.log(count)
-            // const playload = variables.map((item) => {})
-            let varToReplace = null;
-            console.log(variables)
-            function replaceVariables() {
-                // Create a regular expression to match variables in the equation
-                const regex = /[a-zA-Z]+(?:_[0-9]+)?/g;
-              
-                // Replace variables in the equation with values from the variables array
-                const replacedEquation = equation.replace(regex, match => {
-                  const variable = variables.find(v => v.variableName === match);
-                  if (variable) {
-                      if (!variable.input.length) {
-                        varToReplace = variable.variableName;  
-                      }
-                    return variable.input || "x"
-                  }
-                  else {
-                    varToReplace = variable.variableName;
-                    return "x";
-                  }                  
-                });
-              
-                // Return the equation with variables replaced
-                return replacedEquation;
-            }
-                      
+            const result = replaceVariables(equation, variables);            
             // Make the api request to the solve
             // Add a time out if the API solver is taking too long
             let apiCallFinished = false;
@@ -118,26 +92,25 @@ const UseFormula = (props) => {
                     setLoading(true)                    
                 }
             }, 500)         
-
-            const result = replaceVariables();
-            console.log(result)
+                            
             // Api call
             axios.post(`http://${config.url}:3001/solve`, {data: result})
-                .then((response) => {
-                    let newVariablesList = [...variables];                    
-                    const index = variables.findIndex((v) => v.variableName === varToReplace);                                         
-                    newVariablesList[index].input = response.data.result.toString();                    
-                    setVariables(newVariablesList);                    
-                })
-                .catch((error) => {                    
-                    console.log(error);
-                    setUnsuccessful(true);
-                })   
-                .finally(() => {                    
-                    apiCallFinished = true;
-                    setLoading(false);                    
-                    clearTimeout(timerRef.current);
-                })         
+            .then((response) => {
+                const toReplace = variables.find((e) => e.input === "");                                                                        
+                const newVariablesList = [...variables];
+                const index = variables.findIndex((v) => v.variableName === toReplace.variableName);                                                             
+                newVariablesList[index].input = response.data.result.toString();                    
+                setVariables(newVariablesList);                    
+            })
+            .catch((error) => {                    
+                console.log(error);
+                setUnsuccessful(true);
+            })   
+            .finally(() => {                    
+                apiCallFinished = true;
+                setLoading(false);                    
+                clearTimeout(timerRef.current);
+            })         
         }
         else {
             // If zero, then are no variables that arent filled
@@ -147,9 +120,6 @@ const UseFormula = (props) => {
             }
         }
         
-    
-    
-
   return (
     <View style={styles.container}>
       {loading ? <View style={styles.overlay}><ActivityIndicator size="large"/></View> : <></>}
@@ -160,7 +130,7 @@ your equation. Make sure you have exactly one unknown variable." emoji="🤔" se
       <Text style={styles.title}>Use Formula</Text>  
       <View style={styles.contentContainer}>      
         <View style={styles.imageContainer}>
-        <Image source={{uri: imageData}} style={{width: 200, height: 100}}/>
+        <Image source={{uri: imageData}} style={styles.image}/>
         </View>  
         <ScrollView style={styles.variableBox}>
             {variables.map((v, index) => {
@@ -189,10 +159,19 @@ const styles = StyleSheet.create({
         color: "#2F4464",
         fontFamily: "Poppins-SemiBold"
     },
-    imageContainer: {        
-        borderRadius: 20,
-        overflow: "hidden",
-        elevation: 5,
+    image: {
+        flex: 1,
+        width: null,
+        height: null,
+        resizeMode: 'contain'
+    },
+    imageContainer: {  
+        backgroundColor: "white",
+        paddingHorizontal: 5,      
+        width: 300,
+        height: 100,
+        borderRadius: 5,
+        elevation: 5
     },
     equation: {
         fontSize: 30

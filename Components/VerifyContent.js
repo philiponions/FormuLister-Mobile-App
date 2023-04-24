@@ -15,7 +15,9 @@ const VerifyContent = (props) => {
                 <View style={styles.verifyContent}>
                     <Text style={styles.verifyText}>Is this correct?</Text>
                     <Text style={styles.verifyDescription}>FormuLister found the following formula: </Text>                
-                        <Image source={{uri: props.imageData}} style={{width: 100,height:100}}/>                
+                        <View style={styles.imageContainer}>
+                            <Image source={{uri: props.imageData}} style={styles.image}/>                
+                        </View>
                 </View>
                 <View style={styles.variablesText}>
                     <Text style={styles.verifyDescription}>with variables </Text>                                    
@@ -31,6 +33,16 @@ const VerifyContent = (props) => {
 }
 
 const styles = StyleSheet.create({
+    imageContainer: {        
+        width: 250,
+        height: 90
+    },
+    image: {
+        flex: 1,
+        width: null,
+        height: null,
+        resizeMode: 'contain'
+    },
     verifyContent: {
         alignItems: "center"
     },
