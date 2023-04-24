@@ -38,7 +38,7 @@ const Signup = (props) => {
     // if no error message, its good
     if (!errorMessage) {
             // Api call good to go
-            axios.post(`http://${config.url}:8000/user/register`, {
+            axios.post(`${config.user_url}/user/register`, {
                 username: username,
                 email: email,
                 password: password,        

@@ -1,21 +1,24 @@
 import { View, Text, StyleSheet, Touchable, TouchableOpacity, Alert } from 'react-native'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { UserContext } from '../Context/UserContext'
 import { FontAwesome } from '@expo/vector-icons';
 import config from '../utils/config'
+import ModalPopup from './ModalPopup'
+import DeleteAlert from './DeleteAlert'
 
 const FormulaItem = (props) => {
     const navigation = useNavigation();
     const context = useContext(UserContext);   
+    const [deleteConfirm, setDeleteConfirm] = useState(false);
 
     const deleteFormula = () => {
         const newList = props.formulas.filter((f) => f._id !== props.id);
         props.setFormulas(newList);
 
         // Delete the formula in the database.
-        axios.put(`http://${config.url}:8000/formula/users/${context.userObj.id}/formulas/${props.id}`).catch((response) => {
+        axios.put(`${config.user_url}/formula/users/${context.userObj.id}/formulas/${props.id}`).catch((response) => {
             console.log(response.message);
         })
     }
@@ -41,7 +44,10 @@ const FormulaItem = (props) => {
     }    
 
   return (
-    <TouchableOpacity onPress={goToUseFormula} onLongPress={createConfirmationAlert} style={styles.container}>        
+    <TouchableOpacity onPress={goToUseFormula} onLongPress={() => setDeleteConfirm(true)} style={styles.container}>        
+        <ModalPopup visible={deleteConfirm}>
+            <DeleteAlert setDeleteConfirm={setDeleteConfirm} deleteFormula={deleteFormula}/>
+        </ModalPopup>
         <View style={styles.infoContainer}>            
             <Text style={styles.titleText} numberOfLines={1} ellipsizeMode='tail'>{props.title ? props.title : "Formula"}</Text>
             <View style={styles.dateContainer}>

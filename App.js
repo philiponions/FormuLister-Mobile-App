@@ -39,7 +39,7 @@ export default function App() {
   getUserToken = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      axios.post(`http://${config.url}:8000/user/authenticate`, {
+      axios.post(`${config.user_url}/user/authenticate`, {
         token: token
       }).then((response) => {                  
         setUserObj({ username: response.data.username, id: response.data.id })        

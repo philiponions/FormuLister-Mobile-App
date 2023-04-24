@@ -67,4 +67,6 @@ describe('replaceVariables', function () {
     const actual = replaceVariables(equation, variables);
     assert.deepEqual(actual, expected);    
   }) 
+  
 })
+

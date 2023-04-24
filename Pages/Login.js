@@ -28,7 +28,7 @@ const Login = (props) => {
     const token = uuid.v4();
 
     if (username.length && password.length) {
-        axios.post(`http://${config.url}:8000/user/login`, {
+        axios.post(`${config.user_url}/user/login`, {
             username: username,
             password: password,
             token: token

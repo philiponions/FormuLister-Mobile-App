@@ -17,10 +17,8 @@ import { detectVariables } from '../utils/variables';
 
 const AddFormula = () => {    
     const [equation, setEquation] = useState("") ;
-    const [variables, setVariable] = useState([]);
-    const [submitted, setSubmitted] = useState(false);
+    const [variables, setVariable] = useState([]);    
     const [title, setTitle] = useState("")
-    const isMountedRef = useRef(false);
     const context = useContext(UserContext);
     const windowHeight = useWindowDimensions().height;
     const [verify, setVerify] = useState(false);
@@ -28,56 +26,14 @@ const AddFormula = () => {
     const [imageData, setImageData] = useState(null);
     const navigation = useNavigation();
 
-    // Do not trigger the alert if its the first time this page has rendered
-    useEffect(() => {
-        if (isMountedRef.current === true) {
-            // createVerifyAlert();
-            // setVerify(true);
-
-        }
-        else {
-            isMountedRef.current = true
-        }
-    }, [submitted])
-
-    // const detectVariables = () => {
-    //     characters = equation.split("");        
-    //     // const variablesFound = [];
-
-    //     const regex = new RegExp("[a-zA-Z_]+\\w*"); // Matches alphabets and optional underscore followed by digits
-    //     const variablesFound = new Set();   
-    //     const terms = equation.split(/[\+\-\=\*\^\/\(\)]/).map(str => str.replace(/\s/g, '')); // Split equation into terms // Split equation into terms        
-
-    //     terms.forEach(term => {            
-    //         if (term.match(regex)) {                
-    //           variablesFound.add(term);
-    //         }
-    //     });
-
-    //     setSubmitted(true);
-    //     setVariable(Array.from(variablesFound));
-    // }
-
-    const createUnsuccessfulAlert = () =>
-        Alert.alert('Parsing Unsuccessful', `Looks like FormuLister could not parse your formula.`, [
-        {
-            text: 'Dismiss',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'dismiss',
-        },
-        
-    ]);
-
-
     const processEquation = () => {
-        if (equation.length) {
-            setSubmitted(true);
+        if (equation.length) {            
             const foundVariables = detectVariables(equation);
             setVariable(foundVariables);
 
             axios({
                 method: 'post',
-                url: `http://${config.url}:3001/render`,
+                url: `${config.solver_url}/render`,
                 responseType: 'arraybuffer', // Receive binary response
                 headers: {
                   'Content-Type': 'application/json',              
@@ -104,7 +60,7 @@ const AddFormula = () => {
 
     const handleSend = () => {
 
-        axios.post(`http://${config.url}:8000/formula/add`, {
+        axios.post(`${config.user_url}/formula/add`, {
             id: context.userObj.id,
             equation: equation,
             variables: variables,

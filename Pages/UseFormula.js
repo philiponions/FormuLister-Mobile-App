@@ -14,6 +14,7 @@ const UseFormula = (props) => {
     const timerRef = useRef(null);
     const [imageData, setImageData] = useState(null);  
     const [unsuccessful, setUnsuccessful] = useState(false);  
+    const [imageLoading, setImageLoading] = useState(false);
 
     const [variables, setVariables] = useState(props.selectedFormula.variables.map((v) => {
         return {
@@ -27,9 +28,10 @@ const UseFormula = (props) => {
         if (props.cache[props.selectedFormula.id]) {                        
             setImageData(props.cache[props.selectedFormula.id]);   
         } else {
+            setImageLoading(true);
             axios({
                 method: 'post',
-                url: `http://${config.url}:3001/render`,
+                url: `${config.solver_url}/render`,
                 responseType: 'arraybuffer', // Receive binary response
                 headers: {
                   'Content-Type': 'application/json',              
@@ -45,6 +47,7 @@ const UseFormula = (props) => {
                   newCache[props.selectedFormula.id] = base64Image;
                   props.setCache(newCache);
                   setImageData(base64Image);              
+                  setImageLoading(false);
                 })
                 .catch(error => {
                   console.error(error);
@@ -95,7 +98,7 @@ const UseFormula = (props) => {
             }, 500)         
                             
             // Api call
-            axios.post(`http://${config.url}:3001/solve`, {data: result})
+            axios.post(`${config.solver_url}/solve`, {data: result})
             .then((response) => {
                 const toReplace = variables.find((e) => e.input === "");                                                                        
                 const newVariablesList = [...variables];
@@ -124,15 +127,15 @@ const UseFormula = (props) => {
         
   return (
     <View style={styles.container}>
-      {loading ? <View style={styles.overlay}><ActivityIndicator size="large"/></View> : <></>}
+       {loading ?? <View style={styles.overlay}><ActivityIndicator size="large"/></View>}
         <ModalPopup visible={unsuccessful}>
             <Unsuccessful title="Something Went Wrong" message="Looks like FormuLister could not solve
 your equation. Make sure you have exactly one unknown variable." emoji="🤔" setUnsuccessful={setUnsuccessful}/>
         </ModalPopup>
       <Text style={styles.title}>Use Formula</Text>  
       <View style={styles.contentContainer}>      
-        <View style={styles.imageContainer}>
-        <Image source={{uri: imageData}} style={styles.image}/>
+        <View style={styles.imageContainer}>            
+            {imageLoading ? <ActivityIndicator size="large"/> : <Image source={{uri: imageData}} style={styles.image}/>}
         </View>  
         <ScrollView style={styles.variableBox}>
             {variables.map((v, index) => {
@@ -173,7 +176,8 @@ const styles = StyleSheet.create({
         width: 300,
         height: 100,
         borderRadius: 5,
-        elevation: 5
+        elevation: 5,
+        justifyContent: "center"
     },
     equation: {
         fontSize: 30
@@ -226,8 +230,9 @@ const styles = StyleSheet.create({
         left: 0,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "gray",
+        backgroundColor: "#3d3d3d",
         opacity: 0.9,
+        zIndex: 1
     },
     container: {
           flex: 1,
