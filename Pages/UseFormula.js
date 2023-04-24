@@ -6,6 +6,7 @@ import config from '../utils/config'
 import ModalPopup from '../Components/ModalPopup'
 import Unsuccessful from '../Components/Unsuccessful'
 import { detectVariables, replaceVariables } from '../utils/variables'
+import { evaluate } from 'mathjs'
 
 
 const UseFormula = (props) => {
@@ -99,7 +100,8 @@ const UseFormula = (props) => {
                 const toReplace = variables.find((e) => e.input === "");                                                                        
                 const newVariablesList = [...variables];
                 const index = variables.findIndex((v) => v.variableName === toReplace.variableName);                                                             
-                newVariablesList[index].input = response.data.result.toString();                    
+                const answer = evaluate(response.data.result.toString()).toString();                 
+                newVariablesList[index].input = answer;                                    
                 setVariables(newVariablesList);                    
             })
             .catch((error) => {                    

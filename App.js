@@ -50,7 +50,7 @@ export default function App() {
         setInitialRoute("Login")
       })       
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
   }
 
