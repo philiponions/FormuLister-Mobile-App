@@ -43,14 +43,16 @@ const Signup = (props) => {
                 email: email,
                 password: password,        
             }).then(() => {
+                navigation.navigate("Login");
                 Toast.show({                
                     text1: 'Sign up successful!'
                   });                
             }).catch((err) => {
                 console.log(err);
-            }).finally(() => {
-                // Go back to login regardless
-                navigation.navigate("Login");
+                Toast.show({    
+                    type: 'error',            
+                    text1: err.response.data
+                  });
             })
         } else {
             Toast.show({    
