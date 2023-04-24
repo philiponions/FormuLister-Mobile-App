@@ -3,19 +3,21 @@ import React from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-const Unsuccessful = (props) => {         
+const Empty = (props) => {         
     return (
     <View style={styles.verifyContainer}>                
                 <View style={styles.unsuccessfulContent}>
-                    <Text style={styles.unsuccessfulText}>{props.title}</Text>                    
+                    <Text style={styles.unsuccessfulText}>Parsing Unsuccessful</Text>                    
                 </View>
                 <View style={styles.emojiContainer}>
                     <Text style={styles.emoji}>
-                        {props.emoji}
+                        😞
                     </Text>
                 </View>
                 <View style={styles.variablesText}>
-                    <Text style={styles.unsuccessfulDescription}>{props.message} </Text>                                    
+                    <Text style={styles.unsuccessfulDescription}>Looks like FormuLister could not parse
+                    your equation. Check again and
+                    make sure it was inputted correctly. </Text>                                    
                 </View>
                 <TouchableOpacity onPress={() => props.setUnsuccessful(false)} style={styles.modalButton}>
                     <Text style={styles.modalText}>Dismiss</Text>
@@ -44,14 +46,13 @@ const styles = StyleSheet.create({
     },
     unsuccessfulText: {
         fontSize: 28,        
-        fontFamily: "Poppins-SemiBold", 
-        textAlign: "center"       
+        fontFamily: "Poppins-SemiBold",        
     },
     unsuccessfulDescription: {
         fontFamily: "Poppins-Regular",
-        fontSize: 14,
+        fontSize: 15,
         textAlign: "center",
-        marginVertical: 15,        
+        marginVertical: 15,
     },
     modalButton: {
         backgroundColor: "#1C5BFF",
@@ -66,4 +67,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Unsuccessful
+export default Empty

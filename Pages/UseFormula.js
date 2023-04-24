@@ -3,12 +3,15 @@ import React, { useEffect, useRef, useState } from 'react'
 import VariableInput from '../Components/VariableInput'
 import axios from 'axios'
 import config from '../Utils.js/config'
+import ModalPopup from '../Components/ModalPopup'
+import Unsuccessful from '../Components/Unsuccessful'
 
 
 const UseFormula = (props) => {
     const [loading, setLoading] = useState(false)    
     const timerRef = useRef(null);
-    const [imageData, setImageData] = useState(null);
+    const [imageData, setImageData] = useState(null);  
+    const [unsuccessful, setUnsuccessful] = useState(false);  
 
     const [variables, setVariables] = useState(props.selectedFormula.variables.map((v) => {
         return {
@@ -71,16 +74,18 @@ const UseFormula = (props) => {
         // Count how many variables arent filled. There should only be
         // exactly one variable unknown
         let count = 0;
-        for (i = 0; i < variables.length; i++) {
+        for (i = 0; i < variables.length; i++) {            
             if (variables[i].input.length === 0) {
                 count++;
             }
-
-        console.log(count);
+            console.log(count);
+        }
+        
         if (count === 1) {            
-                        
+            console.log(count)
             // const playload = variables.map((item) => {})
             let varToReplace = null;
+            console.log(variables)
             function replaceVariables() {
                 // Create a regular expression to match variables in the equation
                 const regex = /[a-zA-Z]+(?:_[0-9]+)?/g;
@@ -115,17 +120,18 @@ const UseFormula = (props) => {
             }, 500)         
 
             const result = replaceVariables();
-            //Api call
+            console.log(result)
+            // Api call
             axios.post(`http://${config.url}:3001/solve`, {data: result})
                 .then((response) => {
                     let newVariablesList = [...variables];                    
                     const index = variables.findIndex((v) => v.variableName === varToReplace);                                         
                     newVariablesList[index].input = response.data.result.toString();                    
-                    setVariables(newVariablesList)
+                    setVariables(newVariablesList);                    
                 })
                 .catch((error) => {                    
                     console.log(error);
-                    createErrorAlert(error);
+                    setUnsuccessful(true);
                 })   
                 .finally(() => {                    
                     apiCallFinished = true;
@@ -137,18 +143,25 @@ const UseFormula = (props) => {
             // If zero, then are no variables that arent filled
             // If more than one, there are too many that arent filled
             // createErrorAlert()
-            console.log("This");
-            console.log("Something went wrong!");
+            setUnsuccessful(true);
             }
         }
-    }
+        
+    
+    
 
   return (
     <View style={styles.container}>
       {loading ? <View style={styles.overlay}><ActivityIndicator size="large"/></View> : <></>}
+        <ModalPopup visible={unsuccessful}>
+            <Unsuccessful title="Something Went Wrong" message="Looks like FormuLister could not solve
+your equation. Make sure you have exactly one unknown variable." emoji="🤔" setUnsuccessful={setUnsuccessful}/>
+        </ModalPopup>
       <Text style={styles.title}>Use Formula</Text>  
-      <View style={styles.contentContainer}>        
-        <Image source={{uri: imageData}} style={{width: 300, height: 100}}/>
+      <View style={styles.contentContainer}>      
+        <View style={styles.imageContainer}>
+        <Image source={{uri: imageData}} style={{width: 200, height: 100}}/>
+        </View>  
         <ScrollView style={styles.variableBox}>
             {variables.map((v, index) => {
                 return <VariableInput key = {index}
@@ -162,7 +175,7 @@ const UseFormula = (props) => {
       </View>
       <TouchableOpacity style={styles.solveButtonContainer} onPress={sendEquation}>
         <View style={styles.solveButton}>
-            <Text>Solve</Text>
+            <Text style={styles.solveText}>Solve</Text>
         </View>
       </TouchableOpacity>            
     </View>
@@ -173,6 +186,13 @@ const UseFormula = (props) => {
 const styles = StyleSheet.create({
     title: {
         fontSize: 50,
+        color: "#2F4464",
+        fontFamily: "Poppins-SemiBold"
+    },
+    imageContainer: {        
+        borderRadius: 20,
+        overflow: "hidden",
+        elevation: 5,
     },
     equation: {
         fontSize: 30
@@ -187,8 +207,14 @@ const styles = StyleSheet.create({
         width: "80%",
         alignItems: "center",
         paddingVertical: 30,
-        backgroundColor: "#00ff00"
+        backgroundColor: "#1C5BFF",
+        borderRadius: 15,
     },  
+    solveText: {
+        color: "#ffffff",
+        fontFamily: "Poppins-Medium",
+        fontSize: 15
+    },
     contentContainer: {
         width: "100%",
         justifyContent: "center",
@@ -196,10 +222,15 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     variableBox: {
-        borderWidth: 2,
+        marginTop: 30,
+        backgroundColor: "#ffffff",
+        borderRadius: 10,
+        elevation: 5,
+        padding: 10,        
         height: 50,
-        width: "80%",
-        marginBottom: 50        
+        width: "90%",
+        marginBottom: 50,
+
     },
     equationContainer: {
         padding: 20,

@@ -139,7 +139,9 @@ const AddFormula = () => {
                 <VerifyContent setVerify={setVerify} imageData={imageData} variables={variables} handleSend={handleSend}/>
             </ModalPopup>
             <ModalPopup visible={unsuccessful}>          
-                <Unsuccessful setUnsuccessful={setUnsuccessful}/>
+                <Unsuccessful title="Parsing Unsuccessful" message="Looks like FormuLister could not parse
+your equation. Check again and
+make sure it was inputted correctly." emoji="😞" setUnsuccessful={setUnsuccessful}/>
             </ModalPopup>
             <Text style={styles.title}>Add a Formula</Text>
             <View style={styles.contentContainer}>

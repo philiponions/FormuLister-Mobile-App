@@ -17,8 +17,10 @@ const VariableInput = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.variableContainer}>        
-        <Text style={styles.variableText}>{props.variableName} = </Text>      
-        <TextInput value={props.input} 
+        {/* <Text numberOfLines={1} style={styles.variableText}>{props.variableName}</Text>       */}
+        <TextInput
+                  placeholder={props.variableName} 
+                  value={props.input} 
                    onChangeText={(e) => setTextInput(e)} 
                    style={styles.textInput}/>
       </View>
@@ -29,21 +31,24 @@ const VariableInput = (props) => {
 const styles = StyleSheet.create({
     container: {
         justifyContent: "center",
-        alignItems: "center",
-        
+        alignItems: "center",        
     },
     variableContainer: {
         flexDirection: "row",
-        marginTop: 10
+        marginTop: 10,
+        alignItems: "center",
     },
     variableText: {
-        width: 40
+        width: 40,
+        fontSize: 15,                
     },
     textInput: {
         margiHorizontal: 12,        
-        borderWidth: 1,
+        backgroundColor: "#EEEEEE",
+        borderRadius: 10,
         padding: 10,
-        width: "80%",
+        width: "95%",
+        fontFamily: "Raleway-Medium"
 
     }
 })
