@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native'
 import React, { useState } from 'react'
 import {  useFonts } from 'expo-font'
 import { useNavigation } from '@react-navigation/native'
@@ -8,6 +8,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import Button from '../Components/Button'
 import config from '../Utils.js/config'
+import { Toast } from 'react-native-toast-message/lib/src/Toast'
 
 
 const Signup = (props) => {  
@@ -17,17 +18,34 @@ const Signup = (props) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigation = useNavigation();
   
+  function isValidEmail() {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  }
+
+  function checkValidity() {
+    if (!isValidEmail()) return "Please enter a valid email!"
+    if (username.length < 4) return "Please enter a username 4 characters or mroe"
+    if (password.length <= 6) return "We recommend a password with 6 characters or more."
+    if (password !== confirmPassword) return "Passwords must match."
+    else {return null}        
+  }
+
   const handleSignup = () => {
       
-    if (password === confirmPassword) {
-        if (password.length >= 6) {
+    const errorMessage = checkValidity();
+
+    // if no error message, its good
+    if (!errorMessage) {
             // Api call good to go
             axios.post(`http://${config.url}:8000/user/register`, {
                 username: username,
                 email: email,
                 password: password,        
             }).then(() => {
-                console.log("Signup successful");
+                Toast.show({                
+                    text1: 'Sign up successful!'
+                  });                
             }).catch((err) => {
                 console.log(err);
             }).finally(() => {
@@ -35,17 +53,16 @@ const Signup = (props) => {
                 navigation.navigate("Login");
             })
         } else {
-            // TODO: toast warnings
-            console.log("We recommend a password with 6 characters or more.")
+            Toast.show({    
+                type: 'error',            
+                text1: errorMessage
+              });
         }
-    } else {
-        // TODO: toast warnings
-        console.log("passwords must be the same");
-    }
   }
 
   return (
     <View style={{flex: 1, backgroundColor: "#ffffff"}}>
+      <KeyboardAvoidingView style={{flex: 1}} behavior='padding'>
       <View style={styles.content}>
         <Text style={styles.title}>FormuLister</Text>
         <View>
@@ -63,6 +80,11 @@ const Signup = (props) => {
         </View>
             <Button action={handleSignup} text="Sign up!"/>
       </View>
+      </KeyboardAvoidingView>
+      <Toast
+        position='top'
+        bottomOffset={20}
+      />
     </View>
   )
 }
@@ -75,8 +97,8 @@ const styles = StyleSheet.create({
         fontFamily: "Poppins-SemiBold"
     },
     image: {
-        width: 300,
-        height: 200,
+        width: 200,
+        height: 140,
     },    
     loginText: {
         color: "white"

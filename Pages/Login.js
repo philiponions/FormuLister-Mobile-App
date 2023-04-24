@@ -10,6 +10,7 @@ import { AntDesign } from '@expo/vector-icons';
 import Field from '../Components/Field';
 import Button from '../Components/Button';
 import config from '../Utils.js/config';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 
 const Login = (props) => {  
@@ -26,18 +27,25 @@ const Login = (props) => {
     const handleLogin = () => {
     const token = uuid.v4();
 
-    axios.post(`http://${config.url}:8000/user/login`, {
-        username: username,
-        password: password,
-        token: token
-    }).then((response) => {
-        createSession(token);                    
-        goToLogin();        
-        context.setUserObj(response.data);   
-        context.setToken(token);                     
-    }).catch((err) => {
-        console.log(err);
-    })
+    if (username.length && password.length) {
+        axios.post(`http://${config.url}:8000/user/login`, {
+            username: username,
+            password: password,
+            token: token
+        }).then((response) => {
+            createSession(token);                    
+            goToLogin();        
+            context.setUserObj(response.data);   
+            context.setToken(token);                     
+        }).catch((err) => {
+            console.log(err);
+        })
+    } else {
+        Toast.show({    
+            type: 'error',            
+            text1: 'Please fill out all fields.'
+          });
+    }
 
   }
 
@@ -83,6 +91,10 @@ const Login = (props) => {
             </TouchableOpacity>
         </View>
         </KeyboardAvoidingView>
+        <Toast
+        position='top'
+        bottomOffset={20}
+      />
     </View>
   )
 }

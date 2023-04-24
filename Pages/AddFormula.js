@@ -47,12 +47,9 @@ const AddFormula = () => {
         const variablesFound = new Set();   
         const terms = equation.split(/[\+\-\=\*\^\/\(\)]/).map(str => str.replace(/\s/g, '')); // Split equation into terms // Split equation into terms        
 
-        terms.forEach(term => {
-            console.log(term);
+        terms.forEach(term => {            
             if (term.match(regex)) {                
               variablesFound.add(term);
-            } else {
-                console.log("no match");
             }
         });
 

@@ -47,7 +47,7 @@ const Menu = (props) => {
     }
 
     const renderFormulas = () => {
-        if (context.formulas) {            
+        if (context.formulas.length) {            
             return context.formulas.map((item) => {
                 return <View style={styles.formuaList}>
                     <FormulaItem                                     
@@ -64,7 +64,9 @@ const Menu = (props) => {
                 
             })
         } else {
-            return null;
+            return <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>Your list is currently empty. Start adding formulas with the button below!</Text>
+            </View>
         }
     }
 
@@ -78,7 +80,7 @@ const Menu = (props) => {
                     <Text style={styles.userText}>{context.userObj.username}</Text>
                 </View>            
             </View>
-            <OptionsButton action={logOut}/>
+            <OptionsButton logOut={logOut}/>
         </View>
         <View style={styles.formulaHeader}>
             <View>
@@ -120,6 +122,14 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between"
     },    
+    emptyContainer: {        
+        marginTop: 50,
+    },
+    emptyText: {
+        fontFamily: "Poppins-Regular",
+        color: "#767676",
+        textAlign: "center"
+    },
     profileContainer: {
         flexDirection: "row"
     },  
