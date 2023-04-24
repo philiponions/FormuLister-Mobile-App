@@ -6,7 +6,7 @@ import axios from 'axios'
 import { UserContext } from '../Context/UserContext'
 import { SimpleLineIcons } from '@expo/vector-icons';
 import OptionsButton from '../Components/OptionsButton'
-import config from '../Utils.js/config'
+import config from '../utils/config'
 import { Toast } from 'react-native-toast-message/lib/src/Toast'
 
 const Menu = (props) => {

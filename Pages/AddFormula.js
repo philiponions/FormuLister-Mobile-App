@@ -4,7 +4,7 @@ import VariableInput from '../Components/VariableInput'
 import { Alert } from 'react-native';
 import { UserContext } from '../Context/UserContext';
 import axios from 'axios';
-import config from '../Utils.js/config';
+import config from '../utils/config';
 import ModalPopup from '../Components/ModalPopup';
 import Button from '../Components/Button';
 import VerifyContent from '../Components/VerifyContent';

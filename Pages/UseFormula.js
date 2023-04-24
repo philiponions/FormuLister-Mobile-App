@@ -2,7 +2,7 @@ import { Image, ActivityIndicator, View, Text, StyleSheet, StatusBar, TouchableO
 import React, { useEffect, useRef, useState } from 'react'
 import VariableInput from '../Components/VariableInput'
 import axios from 'axios'
-import config from '../Utils.js/config'
+import config from '../utils/config'
 import ModalPopup from '../Components/ModalPopup'
 import Unsuccessful from '../Components/Unsuccessful'
 

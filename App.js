@@ -13,7 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { UserContext } from './Context/UserContext';
 import { useFonts } from 'expo-font';
-import config from './Utils.js/config';
+import config from './utils/config';
 
 
 export default function App() {

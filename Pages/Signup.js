@@ -7,7 +7,7 @@ import Field from '../Components/Field'
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import Button from '../Components/Button'
-import config from '../Utils.js/config'
+import config from '../utils/config'
 import { Toast } from 'react-native-toast-message/lib/src/Toast'
 
 

@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { UserContext } from '../Context/UserContext'
 import { FontAwesome } from '@expo/vector-icons';
-import config from '../Utils.js/config'
+import config from '../utils/config'
 
 const FormulaItem = (props) => {
     const navigation = useNavigation();
