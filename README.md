@@ -4,12 +4,18 @@
 
 *Early UI prototypes designed in Figma*
 <br/>
+<img width="600" alt="System Architecture" src="https://user-images.githubusercontent.com/78581216/233927315-9e84837e-55a1-4ee3-be91-4053cd332e3f.jpg">
+<br/>
 
-This **1** out of **3 total repos** that are utilized for the project
+*Application architecture*
+<br/>
+
+This **1** out of **3 total repos** for this project
 
 ### The rest:
 Client facing API - https://github.com/philiponions/FormuLister-REST-API
 <br/> Solver API - https://github.com/philiponions/FormuLister-Solver-API
+
 
 **More updates coming soon!**
 
