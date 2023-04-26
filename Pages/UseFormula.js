@@ -95,7 +95,7 @@ const UseFormula = (props) => {
                 if (!apiCallFinished) {                    
                     setLoading(true)                    
                 }
-            }, 500)         
+            }, 100)         
                             
             // Api call
             axios.post(`${config.solver_url}/solve`, {data: result})
@@ -127,6 +127,7 @@ const UseFormula = (props) => {
         
   return (
     <View style={styles.container}>
+        {/* <View style={styles.overlay}><ActivityIndicator size="large"/></View> */}
        {loading ?? <View style={styles.overlay}><ActivityIndicator size="large"/></View>}
         <ModalPopup visible={unsuccessful}>
             <Unsuccessful title="Something Went Wrong" message="Looks like FormuLister could not solve

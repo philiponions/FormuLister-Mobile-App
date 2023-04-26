@@ -14,6 +14,7 @@ import axios from 'axios';
 import { UserContext } from './Context/UserContext';
 import { useFonts } from 'expo-font';
 import config from './utils/config';
+import { LogBox } from 'react-native';
 
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
   const [token, setToken] = useState("");
   const [userObj, setUserObj] = useState({});
   const [formulas, setFormulas] = useState([]);
+  LogBox.ignoreAllLogs();
   
   // Loads all the fonts. 
   // This is asynchronous so make sure to have a boolean to check if its finished loading all fonts.
@@ -39,16 +41,21 @@ export default function App() {
   getUserToken = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      axios.post(`${config.user_url}/user/authenticate`, {
-        token: token
-      }).then((response) => {                  
-        setUserObj({ username: response.data.username, id: response.data.id })        
-        setToken(token)
-        setInitialRoute("Menu")
-        
-      }).catch((err) => {        
+      if (token) {
+        axios.post(`${config.user_url}/user/authenticate`, {
+          token: token
+        }).then((response) => {                  
+          setUserObj({ username: response.data.username, id: response.data.id })        
+          setToken(token)
+          setInitialRoute("Menu")
+          
+        }).catch((err) => {        
+          setInitialRoute("Login")
+        })       
+      }
+      else {
         setInitialRoute("Login")
-      })       
+      }
     } catch (e) {
       console.log(e);
     }

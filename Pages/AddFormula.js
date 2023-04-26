@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, StatusBar, Touchable, TouchableOpacity, ScrollView, TextInput, Image, KeyboardAvoidingView, useWindowDimensions } from 'react-native'
+import { View, Text, StyleSheet, StatusBar, Touchable, TouchableOpacity, ScrollView, TextInput, Image, KeyboardAvoidingView, useWindowDimensions, ActivityIndicator } from 'react-native'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import VariableInput from '../Components/VariableInput'
 import { Alert } from 'react-native';
@@ -25,8 +25,10 @@ const AddFormula = () => {
     const [unsuccessful, setUnsuccessful] = useState(false);
     const [imageData, setImageData] = useState(null);
     const navigation = useNavigation();
+    const [isLoading, setIsLoading] = useState(false);
 
     const processEquation = () => {
+        setIsLoading(true);
         if (equation.length) {            
             const foundVariables = detectVariables(equation);
             setVariable(foundVariables);
@@ -47,6 +49,7 @@ const AddFormula = () => {
                   const base64Image = `data:image/png;base64,${response.request._response.toString('base64')}`;                                    
                   setImageData(base64Image);              
                   setVerify(true);
+                  setIsLoading(false);
                 })
                 .catch(error => {
                     console.error(error);
@@ -88,7 +91,7 @@ const AddFormula = () => {
     }
 
   return (
-      <View style={ {backgroundColor: "#ffffff", minHeight: Math.round(windowHeight), flex: 1}}>        
+      <View style={ {backgroundColor: "#ffffff", minHeight: Math.round(windowHeight), flex: 1}}>            
         <KeyboardAvoidingView style={styles.keyboardAvoidingView} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.container}>
             <ModalPopup visible={verify}>          
@@ -108,6 +111,7 @@ make sure it was inputted correctly." emoji="😞" setUnsuccessful={setUnsuccess
                     <Text style={styles.description}>Write you equation below</Text>
                     <Text style={styles.description}>and FormuLister will attempt to parse it</Text>
                 </View>
+                {isLoading ? <View style={styles.overlay}><ActivityIndicator size="large"/></View> : null}
                 <TextInput style={styles.titleBox} onChangeText={setTitle} placeholder='Add a title!'/>
                 <TextInput value={equation} onChangeText={setEquation} multiline={true} numberOfLines={5} style={styles.equationBox}></TextInput>
             </View>
@@ -147,6 +151,17 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         flexDirection: "row"
+    },
+    overlay: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        justifyContent: "center",
+        alignItems: "center",      
+        opacity: 0.9,
+        zIndex: 1
     },
     titleBox: {        
         fontFamily: "Poppins-Regular",

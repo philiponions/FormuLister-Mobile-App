@@ -37,8 +37,11 @@ const Login = (props) => {
             goToLogin();        
             context.setUserObj(response.data);   
             context.setToken(token);                     
-        }).catch((err) => {
-            console.log(err);
+        }).catch((err) => {            
+            Toast.show({    
+                type: 'error',            
+                text1: err.response.data.message
+              });
         })
     } else {
         Toast.show({    
